@@ -1,0 +1,15 @@
+<h1><%= @deck.name %></h1>
+
+<p>
+  <strong>Description:</strong>
+  <%= @deck.description %>
+</p>
+
+<%= link_to "Edit Deck", edit_deck_path(@deck) %>
+
+<%= button_to "Delete Deck",
+              @deck,
+              method: :delete,
+              data: { turbo_confirm: "Are you sure you want to delete this deck?" } %>
+
+<%= link_to "Back to Decks", decks_path %>

@@ -1,0 +1,19 @@
+<h1>Edit Deck</h1>
+
+<%= form_with model: @deck do |form| %>
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div>
+    <%= form.submit "Update Deck" %>
+  </div>
+<% end %>
+
+<%= link_to "Back to Deck", deck_path(@deck) %>

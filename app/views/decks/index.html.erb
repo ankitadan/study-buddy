@@ -1,0 +1,16 @@
+<h1>My Decks</h1>
+
+<% if @decks.any? %>
+  <% @decks.each do |deck| %>
+    <div>
+      <h2><%= deck.name %></h2>
+      <p><%= deck.description %></p>
+
+      <%= link_to "View Deck", deck_path(deck) %>
+    </div>
+  <% end %>
+<% else %>
+  <p>No decks found.</p>
+<% end %>
+
+<%= link_to "Create New Deck", new_deck_path %>

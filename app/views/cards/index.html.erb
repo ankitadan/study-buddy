@@ -1,0 +1,26 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Cards" %>
+
+<h1><%= @deck.name %> Cards</h1>
+
+<div id="cards">
+  <% @cards.each do |card| %>
+    <%= render card %>
+
+    <p>
+      <%= link_to "Show this card",
+          deck_card_path(@deck, card) %>
+
+      <%= link_to "Edit",
+          edit_deck_card_path(@deck, card) %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New card",
+    new_deck_card_path(@deck) %>
+
+<br>
+<%= link_to "Create New Deck", new_deck_path %>
+<%= link_to "Back to deck", deck_path(@deck) %>

@@ -1,15 +1,71 @@
 <h1><%= @deck.name %></h1>
 
-<p>
-  <strong>Description:</strong>
-  <%= @deck.description %>
-</p>
+<p><%= @deck.description %></p>
 
-<%= link_to "Edit Deck", edit_deck_path(@deck) %>
+<div>
+  <%= link_to "Add New Card", new_deck_card_path(@deck) %>
+</div>
 
-<%= button_to "Delete Deck",
-              @deck,
-              method: :delete,
-              data: { turbo_confirm: "Are you sure you want to delete this deck?" } %>
+<hr>
 
-<%= link_to "Back to Decks", decks_path %>
+<% if @card %>
+  <div class="flashcard">
+    <h2>Question</h2>
+
+    <p>
+      <%= @card.question %>
+    </p>
+
+    <hr>
+
+    <h2>Answer</h2>
+
+    <p>
+      <%= @card.answer %>
+    </p>
+
+    <div>
+      <%= link_to "Edit Card",
+          edit_deck_card_path(@deck, @card) %>
+
+      <%= button_to "Delete Card",
+          deck_card_path(@deck, @card),
+          method: :delete,
+          data: { turbo_confirm: "Delete this card?" } %>
+    </div>
+  </div>
+
+  <div class="card-navigation">
+    <% if @previous_card %>
+      <%= link_to "Previous Card",
+          deck_path(@deck, card_id: @previous_card.id) %>
+    <% end %>
+
+    <% if @next_card %>
+      <%= link_to "Next Card",
+          deck_path(@deck, card_id: @next_card.id) %>
+    <% end %>
+  </div>
+
+  <% unless @previous_card || @next_card %>
+    <p>This deck has only one card.</p>
+  <% end %>
+
+<% else %>
+  <p>This deck does not have any cards yet.</p>
+
+  <%= link_to "Add Your First Card",
+      new_deck_card_path(@deck) %>
+<% end %>
+
+<hr>
+
+<%= link_to "Back to My Decks", decks_path %> |
+<%= link_to "Create New Deck", new_deck_path %>
+
+<br><br>
+
+<%= button_to "Delete This Deck",
+    deck_path(@deck),
+    method: :delete,
+    data: { turbo_confirm: "Delete this deck and all its cards?" } %>

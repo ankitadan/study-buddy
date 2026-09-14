@@ -1,0 +1,21 @@
+<%= form_with model: [@deck, card] do |form| %>
+  <% if card.errors.any? %>
+    <ul>
+      <% card.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <div>
+    <%= form.label :question %>
+    <%= form.text_area :question %>
+  </div>
+
+  <div>
+    <%= form.label :answer %>
+    <%= form.text_area :answer %>
+  </div>
+
+  <%= form.submit %>
+<% end %>

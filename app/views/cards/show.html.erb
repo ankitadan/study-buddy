@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @card %>
+
+<div>
+  <%= link_to "Edit this card",
+      edit_deck_card_path(@deck, @card) %>
+
+  <%= link_to "Back to cards",
+      deck_cards_path(@deck) %>
+
+  <%= button_to "Destroy this card",
+      deck_card_path(@deck, @card),
+      method: :delete,
+      data: { turbo_confirm: "Are you sure?" } %>
+</div>

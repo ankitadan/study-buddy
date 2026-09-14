@@ -1,16 +1,13 @@
-<h1>My Decks</h1>
+<% @decks.each do |deck| %>
+  <h2><%= deck.name %></h2>
+  <p><%= deck.description %></p>
 
-<% if @decks.any? %>
-  <% @decks.each do |deck| %>
-    <div>
-      <h2><%= deck.name %></h2>
-      <p><%= deck.description %></p>
+  <%= link_to "View Deck", deck_path(deck) %>
 
-      <%= link_to "View Deck", deck_path(deck) %>
-    </div>
-  <% end %>
-<% else %>
-  <p>No decks found.</p>
+  <%= button_to "Delete Deck",
+      deck_path(deck),
+      method: :delete,
+      data: { turbo_confirm: "Are you sure you want to delete this deck?" } %>
 <% end %>
 
 <%= link_to "Create New Deck", new_deck_path %>

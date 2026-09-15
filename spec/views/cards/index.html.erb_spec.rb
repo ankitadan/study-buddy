@@ -11,7 +11,7 @@ RSpec.describe "cards/index", type: :view do
 
   before do
     assign(:deck, deck)
-    assign(:cards, [card])
+    assign(:cards, [ card ])
   end
 
   it "displays the card question and answer" do

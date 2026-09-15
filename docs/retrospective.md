@@ -1,27 +1,38 @@
 # StudyBuddy Retrospective
 
-Complete this document near the end of the project using specific examples from the team’s actual work.
-
 ## What went well
 
-- [Example: Deck and card CRUD was completed with clear Rails associations.]
-- [Example: Pairing helped both members understand the SM-2 state transitions.]
-- [Example: Acceptance tests caught an invalid-input or due-date bug before submission.]
+- The team successfully implemented the core StudyBuddy functionality for managing decks and flashcards. Users can create, view, edit, and delete decks, while also adding, editing, viewing, and deleting cards within a selected deck.
+
+- A major success was organizing cards through nested deck routes. This ensured that each card remained associated with the correct deck and prevented cards from other decks from appearing during navigation. The team also implemented validations requiring deck names, card questions, and card answers. Invalid submissions are rejected without overwriting existing information.
+
+- The card navigation feature also worked well. Users can view one card at a time and move forward or backward through cards in a consistent order. The interface correctly handles the first card, last card, and empty decks. Deleting a deck also removes its associated cards, preventing orphaned records.
+
+- The team also improved the project through routing fixes, view updates, system tests, request tests, model tests, CI fixes, and RuboCop corrections. These improvements helped make the application more reliable and maintainable.
 
 ## What was difficult
 
-- [Describe a real technical or collaboration challenge.]
-- [Describe any difficulty translating the original Leitner proposal into SM-2.]
+- One difficult part was establishing relationship between the deck and card features along with nested routes, nested controllers, views, and database to work together correctly.
+
+- The team also encountered integration issues involving routes, views, CI checks, and RuboCop. Resolving these issues required repeated testing and coordination between team members working on different branches.
 
 ## What we would improve next time
 
-- [Example: Define the SM-2 rating mapping and date rules before implementing views.]
-- [Example: Add integration tests earlier rather than near the deadline.]
+- Next time, the team would define the route structure and feature responsibilities earlier. Establishing clear conventions for nested routes, controller actions, view partials, and naming would reduce integration conflicts.
+
+- We would also create tests before implementing each major feature. Writing acceptance tests for navigation, deletion, validation, and empty-state behavior at the beginning would make it easier to identify missing requirements early.
+
+- The team could improve communication by using smaller, focused branches and merging changes more frequently. Regular integration checks would help catch conflicts before multiple features are completed.
+
+- We would also plan the SM-2 spaced-repetition functionality earlier. Although the deck and card management features provide the foundation for the application, defining how review dates, easiness factors, intervals, and repetition counts would be stored could make the next stage of development more organized.
 
 ## Did the final app meet the original goal?
 
-[State whether users can organize cards, study due material, and receive adaptive SM-2 review dates. Mention any stretch features that were not completed.]
+Yes, the final application met the original goal of providing students with an organized flashcard system. Users can create decks, manage study cards, and review cards one at a time within the correct deck.
+
+The application also satisfies the essential user stories for deck management and card management. It includes validation, navigation, deletion behavior, error handling, and empty-state messages. The implementation provides a strong foundation for adding and fully integrating the SM-2 spaced-repetition review system in future development.
 
 ## Action items
 
-- [Record one or two concrete improvements for a future iteration.]
+- Improve the user interface with clearer styling and feedback messages.
+- Improve test coverage for edge cases involving card deletion and navigation.

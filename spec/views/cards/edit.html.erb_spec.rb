@@ -1,27 +1,34 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe "cards/edit", type: :view do
-  let(:card) {
-    Card.create!(
-      question: "MyText",
-      answer: "MyText",
-      deck: nil
-    )
-  }
+  let!(:deck) { Deck.create!(name: "Spanish") }
 
-  before(:each) do
+  let!(:card) do
+    deck.cards.create!(
+      question: "Hello",
+      answer: "Hola"
+    )
+  end
+
+  before do
+    assign(:deck, deck)
     assign(:card, card)
   end
 
-  it "renders the edit card form" do
+  it "renders the edit form" do
     render
 
-    assert_select "form[action=?][method=?]", card_path(card), "post" do
-      assert_select "textarea[name=?]", "card[question]"
+    expect(rendered).to include("Question")
+    expect(rendered).to include("Answer")
+    expect(rendered).to include("Hello")
+    expect(rendered).to include("Hola")
+  end
 
-      assert_select "textarea[name=?]", "card[answer]"
+  it "uses the nested card form action" do
+    render
 
-      assert_select "input[name=?]", "card[deck_id]"
-    end
+    expect(rendered).to include(
+      %(action="#{deck_card_path(deck, card)}")
+    )
   end
 end

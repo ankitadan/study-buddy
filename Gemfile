@@ -67,3 +67,7 @@ group :test do
 end
 
 gem "rspec-rails", "~> 8.0", groups: [ :development, :test ]
+
+group :test do
+  gem "simplecov", require: false
+end

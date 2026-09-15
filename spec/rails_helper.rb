@@ -1,6 +1,14 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 require 'rails_helper'
+require 'simplecov'
+
+SimpleCov.start 'rails' do
+  enable_coverage :branch
+  add_filter "/spec/"
+  add_filter "/app/jobs/"
+  add_filter "/app/mailers/"
+end
 
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'

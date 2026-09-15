@@ -71,20 +71,7 @@ StudyBuddy is a Rails flashcard app that uses the SM-2 spaced-repetition algorit
 
 ---
 
-### User Story 6: Manage Cards Within a Deck
-
-**As a student, I want to associate multiple study cards with a deck so that I can organize related questions and answers together.**
-
-**Acceptance Criteria:**
-
-* A deck can contain multiple cards.
-* Each card belongs to its associated deck.
-* The user can access card management from a deck.
-* When a deck is deleted, its associated cards are also deleted.
-
----
-
-### User Story 7: Prevent Invalid Deck Information
+### User Story 6: Prevent Invalid Deck Information
 
 **As a student, I want the application to prevent me from saving a deck without a name so that all of my study decks can be clearly identified.**
 
@@ -108,8 +95,110 @@ StudyBuddy is a Rails flashcard app that uses the SM-2 spaced-repetition algorit
 | 3     | View a Deck                      | Essential                 |
 | 4     | Edit a Deck                      | Essential                 |
 | 5     | Delete a Deck                    | Essential                 |
-| 6     | Manage Cards Within a Deck       | Essential                 |
-| 7     | Prevent Invalid Deck Information | Sad Path / Error Handling |
+| 6     | Prevent Invalid Deck Information | Sad Path / Error Handling |
+
+## Card Management
+
+### User Story 1: Create a Card
+
+**As a student, I want to add cards to my study deck with a question and answer so that I can create study material for the selected topic.**
+
+**Acceptance Criteria:**
+
+* The user can open the Create a New Card page from a deck.
+* The user can enter a question and answer.
+* The question cannot be blank.
+* The answer cannot be blank.
+* Submitting valid information creates and saves a card.
+* The card is associated with the selected deck.
+* The user is redirected back to the deck after creation.
+* The card appears under the correct deck.
+
+### User Story 2: View/Navigate Through Cards
+
+**As a student, I want to navigate forward and backward through the cards so that I can study every card in the deck.**
+
+**Acceptance Criteria:**
+
+* The user can open a deck's detail page.
+* The first card is displayed by default.
+* Only one card is displayed at a time.
+* The displayed card includes its question and answer.
+* Cards from other decks are not displayed.
+* The user can click Next Card to view the next card.
+* The user can click Previous Card to view the previous card.
+* Cards are displayed in a consistent order.
+* Navigation remains within the selected deck.
+* The first card does not display a previous-card option.
+* The last card does not display a next-card option.
+* The correct question and answer are displayed after navigation.
+* If the deck has no cards, an informative message is shown.
+* The user can access the option to add a new card.
+
+### User Story 3: Add a Card While Viewing Cards
+
+**As a student, I want to add a new card while viewing a deck so that I can expand my study material whenever needed.**
+
+**Acceptance Criteria:**
+
+* An Add New Card button is visible on the deck page.
+* The user can open the card creation form from the deck page.
+* The new card is automatically associated with the current deck.
+* The user must provide both a question and answer.
+* After saving, the user returns to the deck workflow.
+* The newly created card is available when navigating through the deck.
+
+### User Story 4: Delete a Deck and Its Cards
+
+**As a student, I want all cards to be deleted when I delete a deck so that no orphaned cards remain in the application.**
+
+**Acceptance Criteria:**
+
+* The user can delete an existing deck.
+* The deck is removed from the application.
+* All cards associated with that deck are also deleted.
+* Cards belonging to other decks are not affected.
+* The user is redirected to the decks page after deletion.
+* The deleted deck and its cards cannot be accessed afterward.
+
+### User Story 5: Edit/Update a Card
+
+**As a student, I want to edit a card's question and answer so that I can correct or update my study material.**
+
+**Acceptance Criteria:**
+
+* The user can click Edit for an existing card.
+* The edit form displays the current question and answer.
+* The user can update the question.
+* The user can update the answer.
+* The card remains associated with the same deck.
+* Blank questions or answers are rejected.
+* Invalid updates do not overwrite the existing card information.
+* After a successful update, the user returns to the deck page.
+
+### User Story 6: Delete a Card Without Affecting Card Order
+
+**As a student, I want to delete a card without changing the relative order of the remaining cards so that I can continue studying in a predictable sequence.**
+
+**Acceptance Criteria:**
+
+* The user can delete the currently displayed card.
+* The card is removed from the selected deck.
+* The remaining cards keep their original relative order.
+* Cards from other decks are not affected.
+* The user can continue navigating through the remaining cards.
+* If the deleted card was the first or last card, navigation still works correctly.
+* If no cards remain, the deck displays an informative empty-state message.
+* Deleting a card does not delete the deck or any other cards.
+
+| Story | Feature                               | Classification |
+| ----- | ------------------------------------- | -------------- |
+| 1     | Create a Card                         | Essential      |
+| 2     | View/Navigate Through Cards           | Essential      |
+| 3     | Add a Card While Viewing Cards        | Essential      |
+| 4     | Delete a Deck and Its Cards           | Essential      |
+| 5     | Edit a Card                           | Essential      |
+| 6     | Delete a Card Without Affecting Order | Essential      |
 
 ## Testing
 
@@ -127,19 +216,6 @@ The test suite can be run from the project root using:
 ```bash
 bundle exec rspec
 ```
-
-
-### US-2: Manage cards
-
-As a learner, I want to add, edit, and delete cards inside a deck so that I can manage study material.
-
-**Acceptance criteria**
-
-- A card belongs to one selected deck.
-- Each card has a question and answer.
-- Question and answer cannot be blank.
-- Cards are displayed under the correct deck.
-- A learner can edit or delete an existing card.
 
 ### US-3: Study due cards
 

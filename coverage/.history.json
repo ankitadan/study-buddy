@@ -1,0 +1,559 @@
+{
+  "simplecov_history": {
+    "format_version": 1,
+    "entries": [
+      {
+        "created_at": "2026-09-15T02:58:51Z",
+        "branch": "doc-updates",
+        "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+        "totals": {
+          "line": 89.61,
+          "branch": 90.0
+        },
+        "groups": {
+          "Controllers": {
+            "line": 93.44,
+            "branch": 90.0
+          },
+          "Helpers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Jobs": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "Mailers": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "Models": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        },
+        "files": {
+          "app/controllers/application_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/cards_controller.rb": {
+            "line": 96.42,
+            "branch": 100.0
+          },
+          "app/controllers/decks_controller.rb": {
+            "line": 90.0,
+            "branch": 83.33
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/cards_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/decks_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/jobs/application_job.rb": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "app/mailers/application_mailer.rb": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/card.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/deck.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        }
+      },
+      {
+        "created_at": "2026-09-15T03:11:43Z",
+        "branch": "doc-updates",
+        "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+        "totals": {
+          "line": 58.44,
+          "branch": 60.0
+        },
+        "groups": {
+          "Controllers": {
+            "line": 54.09,
+            "branch": 60.0
+          },
+          "Helpers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Jobs": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "Mailers": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "Models": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        },
+        "files": {
+          "app/controllers/application_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/cards_controller.rb": {
+            "line": 0.0,
+            "branch": 0.0
+          },
+          "app/controllers/decks_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/cards_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/decks_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/jobs/application_job.rb": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "app/mailers/application_mailer.rb": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/card.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/deck.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        }
+      },
+      {
+        "created_at": "2026-09-15T03:18:58Z",
+        "branch": "doc-updates",
+        "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+        "totals": {
+          "line": 55.84,
+          "branch": 40.0
+        },
+        "groups": {
+          "Controllers": {
+            "line": 50.81,
+            "branch": 40.0
+          },
+          "Helpers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Jobs": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "Mailers": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "Models": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        },
+        "files": {
+          "app/controllers/application_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/cards_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/decks_controller.rb": {
+            "line": 0.0,
+            "branch": 0.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/cards_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/decks_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/jobs/application_job.rb": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "app/mailers/application_mailer.rb": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/card.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/deck.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        }
+      },
+      {
+        "created_at": "2026-09-15T03:19:14Z",
+        "branch": "doc-updates",
+        "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+        "totals": {
+          "line": 94.8,
+          "branch": 100.0
+        },
+        "groups": {
+          "Controllers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Helpers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Jobs": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "Mailers": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "Models": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        },
+        "files": {
+          "app/controllers/application_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/cards_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/decks_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/cards_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/decks_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/jobs/application_job.rb": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "app/mailers/application_mailer.rb": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/card.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/deck.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        }
+      },
+      {
+        "created_at": "2026-09-15T03:21:02Z",
+        "branch": "doc-updates",
+        "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+        "totals": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "groups": {
+          "Controllers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Helpers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Models": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        },
+        "files": {
+          "app/controllers/application_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/cards_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/decks_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/cards_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/decks_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/card.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/deck.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        }
+      },
+      {
+        "created_at": "2026-09-15T03:28:44Z",
+        "branch": "doc-updates",
+        "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+        "totals": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "groups": {
+          "Controllers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Helpers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Models": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        },
+        "files": {
+          "app/controllers/application_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/cards_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/decks_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/cards_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/decks_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/card.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/deck.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        }
+      },
+      {
+        "created_at": "2026-09-15T03:29:31Z",
+        "branch": "doc-updates",
+        "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+        "totals": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "groups": {
+          "Controllers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Helpers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Models": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        },
+        "files": {
+          "app/controllers/application_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/cards_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/decks_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/cards_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/decks_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/card.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/deck.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        }
+      },
+      {
+        "created_at": "2026-09-15T03:30:58Z",
+        "branch": "doc-updates",
+        "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+        "totals": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "groups": {
+          "Controllers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Helpers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Models": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        },
+        "files": {
+          "app/controllers/application_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/cards_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/decks_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/cards_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/decks_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/card.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/deck.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        }
+      }
+    ]
+  }
+}

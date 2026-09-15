@@ -253,4 +253,107 @@ end
       end.to change(Card, :count).by(-1)
     end
   end
+
+    describe "GET /decks/:id card navigation" do
+    let!(:deck) do
+      Deck.create!(
+        name: "Spanish",
+        description: "Spanish vocabulary"
+      )
+    end
+
+    let!(:first_card) do
+      deck.cards.create!(
+        question: "Hello",
+        answer: "Hola"
+      )
+    end
+
+    let!(:second_card) do
+      deck.cards.create!(
+        question: "Goodbye",
+        answer: "Adios"
+      )
+    end
+
+    let!(:third_card) do
+      deck.cards.create!(
+        question: "Thank you",
+        answer: "Gracias"
+      )
+    end
+
+    it "displays the first card by default" do
+      get deck_path(deck)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(first_card.question)
+      expect(response.body).to include(first_card.answer)
+      expect(response.body).not_to include(second_card.question)
+      expect(response.body).to include("Next Card")
+      expect(response.body).not_to include("Previous Card")
+    end
+
+    it "displays the selected card" do
+      get deck_path(deck), params: { card_id: second_card.id }
+
+      expect(response.body).to include(second_card.question)
+      expect(response.body).to include(second_card.answer)
+      expect(response.body).not_to include(first_card.question)
+    end
+
+    it "displays previous and next navigation for a middle card" do
+      get deck_path(deck), params: { card_id: second_card.id }
+
+      expect(response.body).to include("Previous Card")
+      expect(response.body).to include("Next Card")
+      expect(response.body).to include("card_id=#{first_card.id}")
+      expect(response.body).to include("card_id=#{third_card.id}")
+    end
+
+    it "does not display Previous Card for the first card" do
+      get deck_path(deck), params: { card_id: first_card.id }
+
+      expect(response.body).not_to include("Previous Card")
+      expect(response.body).to include("Next Card")
+    end
+
+    it "does not display Next Card for the last card" do
+      get deck_path(deck), params: { card_id: third_card.id }
+
+      expect(response.body).to include("Previous Card")
+      expect(response.body).not_to include("Next Card")
+    end
+
+    it "defaults to the first card when the card id is invalid" do
+      get deck_path(deck), params: { card_id: 999_999 }
+
+      expect(response.body).to include(first_card.question)
+      expect(response.body).not_to include(second_card.question)
+    end
+
+    it "does not display cards from another deck" do
+      other_deck = Deck.create!(name: "French")
+      other_card = other_deck.cards.create!(
+        question: "Bonjour",
+        answer: "Hello"
+      )
+
+      get deck_path(deck), params: { card_id: other_card.id }
+
+      expect(response.body).to include(first_card.question)
+      expect(response.body).not_to include(other_card.question)
+    end
+
+    it "displays an empty message when the deck has no cards" do
+      empty_deck = Deck.create!(name: "Empty Deck")
+
+      get deck_path(empty_deck)
+
+      expect(response.body).to include(
+        "This deck does not have any cards yet."
+      )
+      expect(response.body).to include("Add Your First Card")
+    end
+  end
 end

@@ -1,0 +1,1177 @@
+{
+  "$schema": "https://raw.githubusercontent.com/simplecov-ruby/simplecov/main/schemas/coverage-v1.3.schema.json",
+  "meta": {
+    "schema_version": "1.3",
+    "simplecov_version": "1.3.0",
+    "command_name": "RSpec",
+    "command_names": [
+      "RSpec"
+    ],
+    "project_name": "Study-buddy",
+    "timestamp": "2026-09-14T22:30:58.328-05:00",
+    "root": "/mnt/c/Users/Tanvi Patel/Desktop/ruby/ruby-rest-api/study-buddy",
+    "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+    "primary_coverage": "line",
+    "line_coverage": true,
+    "branch_coverage": true,
+    "method_coverage": false
+  },
+  "total": {
+    "lines": {
+      "covered": 73,
+      "missed": 0,
+      "omitted": 72,
+      "total": 73,
+      "percent": 100.0,
+      "strength": 2.5205479452054793
+    },
+    "branches": {
+      "covered": 10,
+      "missed": 0,
+      "total": 10,
+      "percent": 100.0,
+      "strength": 2.4
+    }
+  },
+  "coverage": {
+    "app/controllers/application_controller.rb": {
+      "source": [
+        "class ApplicationController < ActionController::Base",
+        "  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.",
+        "  allow_browser versions: :modern",
+        "",
+        "  # Changes to the importmap will invalidate the etag for HTML responses",
+        "  stale_when_importmap_changes",
+        "end"
+      ],
+      "lines": [
+        1,
+        null,
+        1,
+        null,
+        null,
+        1,
+        null
+      ],
+      "lines_covered_percent": 100.0,
+      "covered_lines": 3,
+      "missed_lines": 0,
+      "omitted_lines": 4,
+      "total_lines": 3,
+      "branches": [],
+      "branches_covered_percent": 100.0,
+      "covered_branches": 0,
+      "missed_branches": 0,
+      "total_branches": 0
+    },
+    "app/controllers/cards_controller.rb": {
+      "source": [
+        "class CardsController < ApplicationController",
+        "  before_action :set_deck",
+        "  before_action :set_card, only: %i[show edit update destroy]",
+        "",
+        "  def index",
+        "    @cards = @deck.cards",
+        "  end",
+        "",
+        "  def show",
+        "  end",
+        "",
+        "  def new",
+        "    @card = @deck.cards.build",
+        "  end",
+        "",
+        "  def create",
+        "    @card = @deck.cards.build(card_params)",
+        "",
+        "    if @card.save",
+        "      redirect_to deck_path(@deck),",
+        "                  notice: \"Card was successfully created.\"",
+        "    else",
+        "      render :new, status: :unprocessable_entity",
+        "    end",
+        "  end",
+        "",
+        "  def edit",
+        "  end",
+        "",
+        "  def update",
+        "    if @card.update(card_params)",
+        "      redirect_to deck_path(@deck),",
+        "                  notice: \"Card was successfully updated.\"",
+        "    else",
+        "      render :edit, status: :unprocessable_entity",
+        "    end",
+        "  end",
+        "",
+        "  def destroy",
+        "    @card.destroy",
+        "",
+        "    redirect_to deck_path(@deck),",
+        "                notice: \"Card was successfully deleted.\"",
+        "  end",
+        "",
+        "  private",
+        "",
+        "  def set_deck",
+        "    @deck = Deck.find(params[:deck_id])",
+        "  end",
+        "",
+        "  def set_card",
+        "    @card = @deck.cards.find(params[:id])",
+        "  end",
+        "",
+        "  def card_params",
+        "    params.require(:card).permit(:question, :answer)",
+        "  end",
+        "end"
+      ],
+      "lines": [
+        1,
+        1,
+        1,
+        null,
+        1,
+        4,
+        null,
+        null,
+        1,
+        null,
+        null,
+        1,
+        1,
+        null,
+        null,
+        1,
+        3,
+        null,
+        3,
+        1,
+        null,
+        null,
+        2,
+        null,
+        null,
+        null,
+        1,
+        null,
+        null,
+        1,
+        2,
+        1,
+        null,
+        null,
+        1,
+        null,
+        null,
+        null,
+        1,
+        1,
+        null,
+        1,
+        null,
+        null,
+        null,
+        1,
+        null,
+        1,
+        13,
+        null,
+        null,
+        1,
+        5,
+        null,
+        null,
+        1,
+        5,
+        null,
+        null
+      ],
+      "lines_covered_percent": 100.0,
+      "covered_lines": 28,
+      "missed_lines": 0,
+      "omitted_lines": 31,
+      "total_lines": 28,
+      "branches": [
+        {
+          "type": "then",
+          "start_line": 20,
+          "end_line": 21,
+          "coverage": 1,
+          "inline": false,
+          "report_line": 19
+        },
+        {
+          "type": "else",
+          "start_line": 23,
+          "end_line": 23,
+          "coverage": 2,
+          "inline": false,
+          "report_line": 22
+        },
+        {
+          "type": "then",
+          "start_line": 32,
+          "end_line": 33,
+          "coverage": 1,
+          "inline": false,
+          "report_line": 31
+        },
+        {
+          "type": "else",
+          "start_line": 35,
+          "end_line": 35,
+          "coverage": 1,
+          "inline": false,
+          "report_line": 34
+        }
+      ],
+      "branches_covered_percent": 100.0,
+      "covered_branches": 4,
+      "missed_branches": 0,
+      "total_branches": 4
+    },
+    "app/controllers/decks_controller.rb": {
+      "source": [
+        "class DecksController < ApplicationController",
+        "  before_action :set_deck, only: %i[show edit update destroy]",
+        "",
+        "  def index",
+        "    @decks = Deck.all",
+        "  end",
+        "",
+        "  def new",
+        "    @deck = Deck.new",
+        "  end",
+        "",
+        "  def create",
+        "    @deck = Deck.new(deck_params)",
+        "",
+        "    if @deck.save",
+        "      redirect_to @deck, notice: \"Deck was successfully created.\"",
+        "    else",
+        "      render :new, status: :unprocessable_entity",
+        "    end",
+        "  end",
+        "",
+        "  def show",
+        "    @cards = @deck.cards.order(:id)",
+        "",
+        "    if @cards.any?",
+        "      @card = @cards.find_by(id: params[:card_id]) || @cards.first",
+        "",
+        "      @previous_card = @cards.where(\"id < ?\", @card.id).last",
+        "      @next_card = @cards.where(\"id > ?\", @card.id).first",
+        "    end",
+        "  end",
+        "",
+        "  def edit",
+        "  end",
+        "",
+        "  def update",
+        "    if @deck.update(deck_params)",
+        "      redirect_to @deck, notice: \"Deck was successfully updated.\"",
+        "    else",
+        "      render :edit, status: :unprocessable_entity",
+        "    end",
+        "  end",
+        "",
+        "  def destroy",
+        "    @deck.destroy",
+        "",
+        "    redirect_to decks_path,",
+        "                notice: \"Deck was successfully deleted.\"",
+        "  end",
+        "",
+        "  private",
+        "",
+        "  def set_deck",
+        "    @deck = Deck.find(params[:id])",
+        "  end",
+        "",
+        "  def deck_params",
+        "    params.require(:deck).permit(:name, :description)",
+        "  end",
+        "end"
+      ],
+      "lines": [
+        1,
+        1,
+        null,
+        1,
+        2,
+        null,
+        null,
+        1,
+        2,
+        null,
+        null,
+        1,
+        4,
+        null,
+        4,
+        3,
+        null,
+        1,
+        null,
+        null,
+        null,
+        1,
+        12,
+        null,
+        12,
+        7,
+        null,
+        7,
+        7,
+        null,
+        null,
+        null,
+        1,
+        null,
+        null,
+        1,
+        3,
+        2,
+        null,
+        1,
+        null,
+        null,
+        null,
+        1,
+        3,
+        null,
+        3,
+        null,
+        null,
+        null,
+        1,
+        null,
+        1,
+        20,
+        null,
+        null,
+        1,
+        7,
+        null,
+        null
+      ],
+      "lines_covered_percent": 100.0,
+      "covered_lines": 30,
+      "missed_lines": 0,
+      "omitted_lines": 30,
+      "total_lines": 30,
+      "branches": [
+        {
+          "type": "then",
+          "start_line": 16,
+          "end_line": 16,
+          "coverage": 3,
+          "inline": false,
+          "report_line": 15
+        },
+        {
+          "type": "else",
+          "start_line": 18,
+          "end_line": 18,
+          "coverage": 1,
+          "inline": false,
+          "report_line": 17
+        },
+        {
+          "type": "then",
+          "start_line": 26,
+          "end_line": 29,
+          "coverage": 7,
+          "inline": false,
+          "report_line": 25
+        },
+        {
+          "type": "else",
+          "start_line": 25,
+          "end_line": 30,
+          "coverage": 5,
+          "inline": true,
+          "report_line": 25
+        },
+        {
+          "type": "then",
+          "start_line": 38,
+          "end_line": 38,
+          "coverage": 2,
+          "inline": false,
+          "report_line": 37
+        },
+        {
+          "type": "else",
+          "start_line": 40,
+          "end_line": 40,
+          "coverage": 1,
+          "inline": false,
+          "report_line": 39
+        }
+      ],
+      "branches_covered_percent": 100.0,
+      "covered_branches": 6,
+      "missed_branches": 0,
+      "total_branches": 6
+    },
+    "app/helpers/application_helper.rb": {
+      "source": [
+        "module ApplicationHelper",
+        "end"
+      ],
+      "lines": [
+        1,
+        null
+      ],
+      "lines_covered_percent": 100.0,
+      "covered_lines": 1,
+      "missed_lines": 0,
+      "omitted_lines": 1,
+      "total_lines": 1,
+      "branches": [],
+      "branches_covered_percent": 100.0,
+      "covered_branches": 0,
+      "missed_branches": 0,
+      "total_branches": 0
+    },
+    "app/helpers/cards_helper.rb": {
+      "source": [
+        "module CardsHelper",
+        "end"
+      ],
+      "lines": [
+        1,
+        null
+      ],
+      "lines_covered_percent": 100.0,
+      "covered_lines": 1,
+      "missed_lines": 0,
+      "omitted_lines": 1,
+      "total_lines": 1,
+      "branches": [],
+      "branches_covered_percent": 100.0,
+      "covered_branches": 0,
+      "missed_branches": 0,
+      "total_branches": 0
+    },
+    "app/helpers/decks_helper.rb": {
+      "source": [
+        "module DecksHelper",
+        "end"
+      ],
+      "lines": [
+        1,
+        null
+      ],
+      "lines_covered_percent": 100.0,
+      "covered_lines": 1,
+      "missed_lines": 0,
+      "omitted_lines": 1,
+      "total_lines": 1,
+      "branches": [],
+      "branches_covered_percent": 100.0,
+      "covered_branches": 0,
+      "missed_branches": 0,
+      "total_branches": 0
+    },
+    "app/models/application_record.rb": {
+      "source": [
+        "class ApplicationRecord < ActiveRecord::Base",
+        "  primary_abstract_class",
+        "end"
+      ],
+      "lines": [
+        1,
+        1,
+        null
+      ],
+      "lines_covered_percent": 100.0,
+      "covered_lines": 2,
+      "missed_lines": 0,
+      "omitted_lines": 1,
+      "total_lines": 2,
+      "branches": [],
+      "branches_covered_percent": 100.0,
+      "covered_branches": 0,
+      "missed_branches": 0,
+      "total_branches": 0
+    },
+    "app/models/card.rb": {
+      "source": [
+        "class Card < ApplicationRecord",
+        "  belongs_to :deck",
+        "",
+        "  validates :question, presence: true",
+        "  validates :answer, presence: true",
+        "end"
+      ],
+      "lines": [
+        1,
+        1,
+        null,
+        1,
+        1,
+        null
+      ],
+      "lines_covered_percent": 100.0,
+      "covered_lines": 4,
+      "missed_lines": 0,
+      "omitted_lines": 2,
+      "total_lines": 4,
+      "branches": [],
+      "branches_covered_percent": 100.0,
+      "covered_branches": 0,
+      "missed_branches": 0,
+      "total_branches": 0
+    },
+    "app/models/deck.rb": {
+      "source": [
+        "class Deck < ApplicationRecord",
+        "  has_many :cards, dependent: :destroy",
+        "   validates :name, presence: true",
+        "end"
+      ],
+      "lines": [
+        1,
+        1,
+        1,
+        null
+      ],
+      "lines_covered_percent": 100.0,
+      "covered_lines": 3,
+      "missed_lines": 0,
+      "omitted_lines": 1,
+      "total_lines": 3,
+      "branches": [],
+      "branches_covered_percent": 100.0,
+      "covered_branches": 0,
+      "missed_branches": 0,
+      "total_branches": 0
+    }
+  },
+  "groups": {
+    "Controllers": {
+      "lines": {
+        "covered": 61,
+        "missed": 0,
+        "omitted": 65,
+        "total": 61,
+        "percent": 100.0,
+        "strength": 2.819672131147541
+      },
+      "branches": {
+        "covered": 10,
+        "missed": 0,
+        "total": 10,
+        "percent": 100.0,
+        "strength": 2.4
+      },
+      "files": [
+        "app/controllers/application_controller.rb",
+        "app/controllers/cards_controller.rb",
+        "app/controllers/decks_controller.rb"
+      ]
+    },
+    "Helpers": {
+      "lines": {
+        "covered": 3,
+        "missed": 0,
+        "omitted": 3,
+        "total": 3,
+        "percent": 100.0,
+        "strength": 1.0
+      },
+      "branches": {
+        "covered": 0,
+        "missed": 0,
+        "total": 0,
+        "percent": 100.0,
+        "strength": 0.0
+      },
+      "files": [
+        "app/helpers/application_helper.rb",
+        "app/helpers/cards_helper.rb",
+        "app/helpers/decks_helper.rb"
+      ]
+    },
+    "Models": {
+      "lines": {
+        "covered": 9,
+        "missed": 0,
+        "omitted": 4,
+        "total": 9,
+        "percent": 100.0,
+        "strength": 1.0
+      },
+      "branches": {
+        "covered": 0,
+        "missed": 0,
+        "total": 0,
+        "percent": 100.0,
+        "strength": 0.0
+      },
+      "files": [
+        "app/models/application_record.rb",
+        "app/models/card.rb",
+        "app/models/deck.rb"
+      ]
+    }
+  },
+  "errors": {},
+  "history": [
+    {
+      "created_at": "2026-09-15T02:58:51Z",
+      "branch": "doc-updates",
+      "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+      "totals": {
+        "line": 89.61,
+        "branch": 90.0
+      },
+      "groups": {
+        "Controllers": {
+          "line": 93.44,
+          "branch": 90.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Jobs": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Mailers": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/cards_controller.rb": {
+          "line": 96.42,
+          "branch": 100.0
+        },
+        "app/controllers/decks_controller.rb": {
+          "line": 90.0,
+          "branch": 83.33
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/cards_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/decks_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/jobs/application_job.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/mailers/application_mailer.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/card.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/deck.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-15T03:11:43Z",
+      "branch": "doc-updates",
+      "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+      "totals": {
+        "line": 58.44,
+        "branch": 60.0
+      },
+      "groups": {
+        "Controllers": {
+          "line": 54.09,
+          "branch": 60.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Jobs": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Mailers": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/cards_controller.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        },
+        "app/controllers/decks_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/cards_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/decks_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/jobs/application_job.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/mailers/application_mailer.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/card.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/deck.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-15T03:18:58Z",
+      "branch": "doc-updates",
+      "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+      "totals": {
+        "line": 55.84,
+        "branch": 40.0
+      },
+      "groups": {
+        "Controllers": {
+          "line": 50.81,
+          "branch": 40.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Jobs": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Mailers": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/cards_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/decks_controller.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/cards_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/decks_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/jobs/application_job.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/mailers/application_mailer.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/card.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/deck.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-15T03:19:14Z",
+      "branch": "doc-updates",
+      "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+      "totals": {
+        "line": 94.8,
+        "branch": 100.0
+      },
+      "groups": {
+        "Controllers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Jobs": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Mailers": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/cards_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/decks_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/cards_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/decks_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/jobs/application_job.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/mailers/application_mailer.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/card.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/deck.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-15T03:21:02Z",
+      "branch": "doc-updates",
+      "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+      "totals": {
+        "line": 100.0,
+        "branch": 100.0
+      },
+      "groups": {
+        "Controllers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/cards_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/decks_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/cards_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/decks_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/card.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/deck.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-15T03:28:44Z",
+      "branch": "doc-updates",
+      "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+      "totals": {
+        "line": 100.0,
+        "branch": 100.0
+      },
+      "groups": {
+        "Controllers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/cards_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/decks_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/cards_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/decks_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/card.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/deck.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-15T03:29:31Z",
+      "branch": "doc-updates",
+      "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+      "totals": {
+        "line": 100.0,
+        "branch": 100.0
+      },
+      "groups": {
+        "Controllers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/cards_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/decks_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/cards_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/decks_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/card.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/deck.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-15T03:30:58Z",
+      "branch": "doc-updates",
+      "commit": "470ecbf9387629133d655aeb291f910e3924dbdb",
+      "totals": {
+        "line": 100.0,
+        "branch": 100.0
+      },
+      "groups": {
+        "Controllers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/cards_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/decks_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/cards_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/decks_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/card.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/deck.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    }
+  ]
+}

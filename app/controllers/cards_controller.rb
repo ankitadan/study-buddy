@@ -43,6 +43,30 @@ class CardsController < ApplicationController
                 notice: "Card was successfully deleted."
   end
 
+def export
+  require "csv"
+
+  csv_data = CSV.generate(headers: true) do |csv|
+    csv << [ "deck_name", "description", "question", "answer" ]
+
+    if @deck.cards.empty?
+      csv << [ @deck.name, @deck.description, nil, nil ]
+    else
+      @deck.cards.each do |card|
+        csv << [
+          @deck.name,
+          @deck.description,
+          card.question,
+          card.answer
+        ]
+      end
+    end
+  end
+
+  send_data csv_data,
+            filename: "#{@deck.name.parameterize}-cards.csv",
+            type: "text/csv"
+end
   private
 
   def set_deck

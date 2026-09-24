@@ -1,7 +1,15 @@
 Rails.application.routes.draw do
-  resources :decks do
-    resources :cards
+resources :decks do
+  resources :cards do
+    collection do
+      get :export
+    end
   end
+
+  collection do
+    post :import
+  end
+end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

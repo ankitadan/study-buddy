@@ -10,12 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_14_180330) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_24_204501) do
   create_table "cards", force: :cascade do |t|
     t.text "answer"
     t.datetime "created_at", null: false
     t.integer "deck_id", null: false
+    t.float "ease_factor", default: 2.5, null: false
+    t.integer "interval", default: 0, null: false
+    t.date "next_review_date"
     t.text "question"
+    t.integer "repetition", default: 0, null: false
     t.datetime "updated_at", null: false
     t.index ["deck_id"], name: "index_cards_on_deck_id"
   end

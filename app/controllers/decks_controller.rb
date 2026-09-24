@@ -48,6 +48,61 @@ class DecksController < ApplicationController
                 notice: "Deck was successfully deleted."
   end
 
+  def import
+  require "csv"
+
+  file = params[:file]
+
+  unless file
+    redirect_to decks_path, alert: "Please select a CSV file."
+    return
+  end
+
+  csv = CSV.parse(file.read.force_encoding("UTF-8"), headers: true)
+
+  required_headers = %w[deck_name description question answer]
+
+  unless required_headers.all? { |header| csv.headers.include?(header) }
+    redirect_to decks_path, alert: "Invalid CSV format."
+    return
+  end
+
+  deck_name = csv.first["deck_name"]
+
+  if deck_name.blank?
+    redirect_to decks_path, alert: "Deck name cannot be blank."
+    return
+  end
+
+  deck = Deck.new(
+    name: deck_name,
+    description: csv.first["description"]
+  )
+
+  csv.each do |row|
+    if row["question"].blank? || row["answer"].blank?
+      redirect_to decks_path,
+                  alert: "Question and answer cannot be blank."
+      return
+    end
+
+    deck.cards.build(
+      question: row["question"],
+      answer: row["answer"]
+    )
+  end
+
+  if deck.save
+    redirect_to deck_path(deck),
+                notice: "Deck was successfully imported."
+  else
+    redirect_to decks_path,
+                alert: "Unable to import deck."
+  end
+rescue CSV::MalformedCSVError
+  redirect_to decks_path, alert: "Invalid CSV file."
+end
+
   private
 
   def set_deck

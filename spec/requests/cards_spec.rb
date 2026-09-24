@@ -179,4 +179,110 @@ RSpec.describe "Cards", type: :request do
       expect(response).to redirect_to(deck_path(deck))
     end
   end
+    describe "GET /decks/:deck_id/cards/export" do
+    it "returns a CSV file" do
+      get export_deck_cards_path(deck)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.media_type).to eq("text/csv")
+    end
+
+    it "exports the deck information" do
+      get export_deck_cards_path(deck)
+
+      expect(response.body).to include("deck_name")
+      expect(response.body).to include("description")
+      expect(response.body).to include("Spanish")
+    end
+
+    it "exports a card's question and answer" do
+      deck.cards.create!(
+        question: "Hello",
+        answer: "Hola"
+      )
+
+      get export_deck_cards_path(deck)
+
+      expect(response.body).to include("Hello")
+      expect(response.body).to include("Hola")
+    end
+
+    it "exports multiple cards" do
+      deck.cards.create!(
+        question: "Hello",
+        answer: "Hola"
+      )
+
+      deck.cards.create!(
+        question: "Goodbye",
+        answer: "Adios"
+      )
+
+      get export_deck_cards_path(deck)
+
+      expect(response.body).to include("Hello")
+      expect(response.body).to include("Hola")
+      expect(response.body).to include("Goodbye")
+      expect(response.body).to include("Adios")
+    end
+
+    it "returns the CSV header when the deck has no cards" do
+      get export_deck_cards_path(deck)
+
+      expect(response.body).to include(
+        "deck_name,description,question,answer"
+      )
+    end
+
+    it "does not export cards from another deck" do
+      other_deck = Deck.create!(name: "French")
+
+      other_deck.cards.create!(
+        question: "Bonjour",
+        answer: "Hello"
+      )
+
+      get export_deck_cards_path(deck)
+
+      expect(response.body).not_to include("Bonjour")
+      expect(response.body).not_to include("Hello")
+    end
+    it "exports cards containing commas" do
+  deck.cards.create!(
+    question: "What is Ruby, exactly?",
+    answer: "A programming language, mainly."
+  )
+
+  get export_deck_cards_path(deck)
+
+  expect(response.body).to include("What is Ruby, exactly?")
+  expect(response.body).to include("A programming language, mainly.")
+end
+
+it "exports cards containing quotes" do
+  deck.cards.create!(
+    question: 'What does "Ruby" mean?',
+    answer: 'It is a "programming language".'
+  )
+
+  get export_deck_cards_path(deck)
+
+  expect(response.body).to include('"Ruby"')
+  expect(response.body).to include('"programming language"')
+end
+
+it "exports cards containing newlines" do
+  deck.cards.create!(
+    question: "What is Ruby?\nGive one example.",
+    answer: "A programming language.\nIt is used with Rails."
+  )
+
+  get export_deck_cards_path(deck)
+
+  expect(response.body).to include("What is Ruby?")
+  expect(response.body).to include("Give one example.")
+  expect(response.body).to include("A programming language.")
+  expect(response.body).to include("It is used with Rails.")
+ end
+  end
 end

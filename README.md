@@ -15,7 +15,7 @@ StudyBuddy is a Ruby on Rails flashcard application for organizing study materia
 * Again, Hard, Good, and Easy self-grading
 * SM-2 scheduling using intervals, repetitions, ease factor, and next review dates
 * Progress statistics and study streaks
-* Optional CSV import/export and quiz mode
+* CSV import/export and optional quiz mode
 
 ## Technologies Used
 
@@ -97,6 +97,20 @@ Study ratings are mapped to quality scores:
 * **Easy = 5**
 
 The SM-2 algorithm uses these ratings to update each card's repetition count, interval, ease factor, and next review date. The ease factor is never allowed to fall below 1.3.
+
+## CSV Import/Export
+
+StudyBuddy supports importing and exporting decks using CSV files.
+
+Each CSV file represents one deck and uses the following columns:
+
+```text
+deck_name,description,question,answer
+```
+
+A CSV export includes the deck name and description along with all cards in the deck. Importing a CSV creates a new deck and its cards.
+
+CSV files can contain commas, quotation marks, and line breaks in card content. Invalid CSV data or missing required fields is rejected without creating a partial deck.
 
 ## Known Limitations
 

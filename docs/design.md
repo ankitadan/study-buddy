@@ -86,7 +86,7 @@ When scheduling functionality is implemented, the `Card` model can be extended w
 
 Review history can also be stored separately so that previous study sessions can be used for progress statistics.
 
-These fields are part of the planned scheduling design and are not currently part of the implemented Card model.
+These fields are now part of the Card model. New cards start with `repetition = 0`, `interval = 0`, `ease_factor = 2.5`, and `next_review_date = today`, so they are due immediately.
 
 ## SM-2 Design Decision
 
@@ -234,9 +234,9 @@ Cards
     +----> Delete Card
 ```
 
-### Future Study Workflow
+### Study Workflow
 
-The planned study workflow is:
+The study workflow is:
 
 ```text
 Select Deck
@@ -270,7 +270,7 @@ The application provides feedback for common empty and invalid states.
 * **Invalid deck:** The application displays validation errors when required information is missing.
 * **Deleting a deck:** The deck and its associated cards are deleted together because of the model relationship.
 
-Future study functionality will also handle:
+Study sessions also handle:
 
 * **No cards due:** Display a message indicating that there are no cards to review.
 * **No cards in a study session:** Provide an appropriate empty-state message.
@@ -311,7 +311,7 @@ The main tradeoff is complexity. Leitner is easier to understand and implement b
 
 Deck and card management are the current core features because they provide the foundation for the rest of the application.
 
-Spaced-repetition scheduling, study sessions, progress statistics, CSV import/export, and quiz mode are designed as future or optional functionality. This allows the team to prioritize a working core application while leaving room for additional features as development continues.
+Spaced-repetition scheduling and study sessions are now implemented on top of deck and card management. Progress statistics and quiz mode remain future or optional functionality. This allows the team to prioritize a working core application while leaving room for additional features as development continues.
 
 ## Current Project Scope
 
@@ -328,5 +328,22 @@ The current implementation provides:
 * Validating card questions and answers
 * Maintaining the relationship between decks and cards
 * Deleting associated cards when a deck is deleted
+* Scheduling reviews with SM-2 (`Card#review`)
+* Study sessions for due cards
 
-The design also provides a planned foundation for spaced-repetition study functionality using SM-2 and future progress-tracking features.
+The design also provides a foundation for future progress-tracking features.
+
+## Study Session Implementation
+
+Study sessions are handled by `StudySessionsController`, a singular resource nested under decks:
+
+| Route                                      | Action   | Purpose                                         |
+| ------------------------------------------ | -------- | ----------------------------------------------- |
+| `GET /decks/:deck_id/study_session`        | `show`   | Show the next due card; `?reveal=true` shows the answer |
+| `POST /decks/:deck_id/study_session/review` | `review` | Grade a card with `card_id` and `rating`        |
+
+* `Card.due` returns cards whose `next_review_date` is today or earlier (or missing), with the most overdue first.
+* `Card::RATINGS` maps `again`, `hard`, `good`, and `easy` to SM-2 quality scores 0, 3, 4, and 5.
+* The study queue is not stored separately. Grading a card calls `Card#review`, which always moves `next_review_date` at least one day ahead, so the card drops out of `Card.due` automatically.
+* The controller rejects unknown ratings, cards that are not due (such as a double-submitted grade), and cards from another deck without changing them.
+* `bin/rails study:reset` resets cards to new-card SM-2 values, and `bin/rails study:reset_due` makes cards due today while keeping their SM-2 progress, so the study flow can be tested repeatedly in development.

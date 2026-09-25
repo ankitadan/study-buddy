@@ -38,6 +38,9 @@ The HTML report is generated at `coverage/index.html`. Running `bin/rails test` 
 - Blank card questions and answers are rejected without creating or updating a card.
 - Deck study navigation selects the first card by default, honors a selected card, and shows the correct previous/next controls.
 - Invalid card IDs fall back to the first card, and empty decks show an empty-state message.
+- Study sessions show only the selected deck's due cards (today or earlier), hide the answer until it is revealed, and show the number of cards due.
+- Again, Hard, Good, and Easy ratings update the card through SM-2, remove it from the queue, and show the next due card or a "no cards due" message.
+- Study sessions reject invalid ratings, cards that are not due, and cards from another deck without changing them.
 
 ### Routing: 7 examples
 

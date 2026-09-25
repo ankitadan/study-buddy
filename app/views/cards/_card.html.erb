@@ -14,4 +14,12 @@
     <%= card.deck_id %>
   </div>
 
+  <div class="sm2-details">
+    <strong>Next review:</strong>
+    <%= card.next_review_date&.to_fs(:review) || "Today" %>
+    (interval <%= pluralize(card.interval, "day") %>,
+    <%= pluralize(card.repetition, "successful review") %>,
+    ease factor <%= card.ease_factor.round(2) %>)
+  </div>
+
 </div>

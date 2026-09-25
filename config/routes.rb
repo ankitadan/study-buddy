@@ -6,6 +6,10 @@ resources :decks do
     end
   end
 
+  resource :study_session, only: :show do
+    post :review
+  end
+
   collection do
     post :import
   end

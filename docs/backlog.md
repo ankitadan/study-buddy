@@ -16,6 +16,9 @@ Update this file as work progresses. Items are grouped by priority and status.
 * ✅ Add flashcard navigation within a deck
 * ✅ Implement the Scheduler service using SM-2
 * ✅ Add study-session flow for due cards
+* ✅ Add due-card query for today and overdue cards
+* ✅ Add acceptance tests for the study-session workflow
+* ✅ Add `study:reset` and `study:reset_due` tasks for repeating study sessions during manual testing
 * ✅ Add scheduler unit tests for Again, Hard, Good, and Easy
 * ✅ Add Deck model RSpec tests
 * ✅ Add Deck request/acceptance tests
@@ -28,9 +31,7 @@ Update this file as work progresses. Items are grouped by priority and status.
 ## To Do: Essential
 
 * ⬜ Add review history
-* ⬜ Add due-card query for today and overdue cards
 * ⬜ Add basic progress statistics and study streak calculation
-* ⬜ Add acceptance tests for the study-session workflow
 * ⬜ Run RuboCop and address relevant style offenses
 
 ## To Do: Stretch Features

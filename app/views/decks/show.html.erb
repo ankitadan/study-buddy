@@ -3,7 +3,9 @@
 <p><%= @deck.description %></p>
 
 <div>
-  <%= link_to "Add New Card", new_deck_card_path(@deck) %>
+  <%= link_to "Add New Card", new_deck_card_path(@deck) %> |
+  <%= link_to "Study Due Cards (#{@deck.cards.due.count})",
+      deck_study_session_path(@deck) %>
 </div>
 
 <hr>

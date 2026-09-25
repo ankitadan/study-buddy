@@ -1,0 +1,138 @@
+<% content_for :title, "#{@deck.name} Progress" %>
+
+<h1>Progress: <%= @deck.name %></h1>
+
+<%= render "deck_progress/streak", progress: @progress, deck: @deck %>
+
+<dl class="stat-tiles">
+  <div class="stat-tile">
+    <dt>Due today</dt>
+    <dd><%= @progress.due_count %></dd>
+  </div>
+  <div class="stat-tile">
+    <dt>Total reviews</dt>
+    <dd><%= @progress.reviews_count %></dd>
+  </div>
+  <div class="stat-tile">
+    <dt>Current streak</dt>
+    <dd><%= pluralize(@progress.current_streak, "day") %></dd>
+  </div>
+  <div class="stat-tile">
+    <dt>Longest streak</dt>
+    <dd><%= pluralize(@progress.longest_streak, "day") %></dd>
+  </div>
+</dl>
+
+<section class="progress-section">
+  <h2>Streak goal</h2>
+
+  <% if @progress.next_milestone %>
+    <div class="journey" role="progressbar"
+         aria-label="Streak goal"
+         aria-valuemin="0" aria-valuemax="<%= @progress.next_milestone %>"
+         aria-valuenow="<%= @progress.current_streak %>">
+      <div class="journey-track">
+        <div class="journey-fill streak-fill" style="width: <%= @progress.streak_goal_percentage %>%"></div>
+      </div>
+      <div class="journey-labels">
+        <span>Day <%= @progress.current_streak %></span>
+        <span>🏅 <%= @progress.next_milestone %>-day streak</span>
+      </div>
+    </div>
+
+    <p class="milestone-next">
+      <%= pluralize(@progress.days_to_next_milestone, "more day") %> of studying
+      to reach a <%= @progress.next_milestone %>-day streak.
+    </p>
+  <% else %>
+    <p class="milestone-next">You are past every milestone. Amazing work!</p>
+  <% end %>
+
+  <% if @progress.earned_milestones.any? %>
+    <ul class="milestones">
+      <% @progress.earned_milestones.each do |days| %>
+        <li class="milestone">🏅 <%= days %>-day streak</li>
+      <% end %>
+    </ul>
+  <% end %>
+</section>
+
+<section class="progress-section">
+  <h2>Mastery</h2>
+
+  <% if @progress.cards_count.zero? %>
+    <p>This deck does not have any cards yet.</p>
+  <% else %>
+    <% percent = @progress.mastery_progress_percentage %>
+    <% mastery = @progress.mastery %>
+
+    <div class="journey mastery-journey" role="progressbar"
+         aria-label="Deck mastery"
+         aria-valuemin="0" aria-valuemax="100" aria-valuenow="<%= percent %>">
+      <div class="journey-track mastery-track">
+        <div class="journey-remaining" style="width: <%= 100 - percent %>%"></div>
+        <span class="journey-stage-mark" style="left: <%= DeckProgress::NEW_STAGE_PERCENT %>%"></span>
+      </div>
+      <div class="mastery-stages">
+        <span class="mastery-stage stage-new" style="width: <%= DeckProgress::NEW_STAGE_PERCENT %>%">
+          New <strong><%= mastery[:new] %></strong>
+        </span>
+        <span class="mastery-stage stage-learning">
+          Learning <strong><%= mastery[:learning] %></strong>
+        </span>
+        <span class="mastery-stage stage-mastered">
+          Mastered <strong><%= mastery[:mastered] %></strong>
+        </span>
+      </div>
+    </div>
+
+    <% if @progress.cards_to_master.zero? %>
+      <p class="mastery-summary"><strong>🎉 Every card in this deck is mastered!</strong></p>
+    <% else %>
+      <p class="mastery-summary">
+        <strong><%= percent %>% of the way to mastering this deck.</strong>
+      </p>
+      <p class="mastery-pending">
+        <%= @progress.cards_to_master %> of <%= pluralize(@progress.cards_count, "card") %> left to master
+        · about <%= pluralize(@progress.reviews_to_mastery, "more review") %>
+        · at least <%= pluralize(@progress.days_to_mastery, "more day") %> if you keep rating Good
+      </p>
+    <% end %>
+
+    <p class="progress-note">
+      Every card starts as New. Its first review moves it into Learning, and it
+      becomes Mastered once SM-2 schedules it <%= DeckProgress::MASTERED_INTERVAL %>
+      or more days away.
+    </p>
+  <% end %>
+</section>
+
+<section class="progress-section">
+  <h2>This week</h2>
+  <p class="progress-note">
+    Studied <%= @progress.days_studied_this_week %> of 7 days this week.
+  </p>
+
+  <ol class="week-strip">
+    <% @progress.this_week.each do |day| %>
+      <% state = day.studied? ? "studied" : (day.future ? "future" : "missed") %>
+      <li class="week-day week-day-<%= state %><%= " week-day-today" if day.today %>"
+          title="<%= day.date.to_fs(:review) %>: <%= day.future ? "upcoming" : pluralize(day.count, "review") %>">
+        <span class="week-day-label"><%= day.label %></span>
+        <span class="week-day-dot" aria-hidden="true"><%= "🔥" if day.studied? %></span>
+        <span class="week-day-count">
+          <%= day.future ? "" : day.count %>
+        </span>
+        <span class="visually-hidden">
+          <%= day.date.strftime("%A") %>: <%= day.future ? "upcoming" : pluralize(day.count, "review") %>
+        </span>
+      </li>
+    <% end %>
+  </ol>
+</section>
+
+<hr>
+
+<%= link_to "Study Due Cards", deck_study_session_path(@deck) %> |
+<%= link_to "Back to Deck", deck_path(@deck) %> |
+<%= link_to "Back to My Decks", decks_path %>

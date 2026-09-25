@@ -37,3 +37,24 @@
   gap: 12px;
   margin-top: 12px;
 }
+
+.deck-summary {
+  margin-bottom: 24px;
+}
+
+.deck-progress {
+  display: flex;
+  gap: 24px;
+  margin: 12px 0;
+}
+
+.deck-progress dt {
+  font-size: 14px;
+  color: #555;
+}
+
+.deck-progress dd {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+}

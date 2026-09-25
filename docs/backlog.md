@@ -18,7 +18,11 @@ Update this file as work progresses. Items are grouped by priority and status.
 * ✅ Add study-session flow for due cards
 * ✅ Add due-card query for today and overdue cards
 * ✅ Add acceptance tests for the study-session workflow
-* ✅ Add `study:reset` and `study:reset_due` tasks for repeating study sessions during manual testing
+* ✅ Add review history
+* ✅ Add basic per-deck progress statistics and study streak calculation on the decks page
+* ✅ Add per-deck progress page with streak status, streak badges, mastery bar, and this-week strip
+* ✅ Add session-complete summary to study sessions
+* ✅ Add `study:reset`, `study:reset_due`, and `study:backfill_streak` tasks for manual testing
 * ✅ Add scheduler unit tests for Again, Hard, Good, and Easy
 * ✅ Add Deck model RSpec tests
 * ✅ Add Deck request/acceptance tests
@@ -30,8 +34,6 @@ Update this file as work progresses. Items are grouped by priority and status.
 
 ## To Do: Essential
 
-* ⬜ Add review history
-* ⬜ Add basic progress statistics and study streak calculation
 * ⬜ Run RuboCop and address relevant style offenses
 
 ## To Do: Stretch Features

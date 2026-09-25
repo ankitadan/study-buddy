@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_24_204501) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_25_155030) do
   create_table "cards", force: :cascade do |t|
     t.text "answer"
     t.datetime "created_at", null: false
@@ -31,5 +31,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_204501) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.integer "card_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "quality", null: false
+    t.date "reviewed_on", null: false
+    t.datetime "updated_at", null: false
+    t.index ["card_id", "reviewed_on"], name: "index_reviews_on_card_id_and_reviewed_on"
+    t.index ["card_id"], name: "index_reviews_on_card_id"
+  end
+
   add_foreign_key "cards", "decks"
+  add_foreign_key "reviews", "cards"
 end

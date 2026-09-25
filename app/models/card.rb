@@ -7,6 +7,7 @@ class Card < ApplicationRecord
   }.freeze
 
   belongs_to :deck
+  has_many :reviews, dependent: :destroy
 
   scope :due, lambda {
     where(next_review_date: nil)
@@ -19,7 +20,13 @@ class Card < ApplicationRecord
 
   after_initialize :set_default_review_date, if: :new_record?
 
-   def review(rating)
+  def review(rating)
+    schedule(rating)
+    save!
+  end
+
+  # Applies SM-2 without saving, so progress forecasts can simulate reviews.
+  def schedule(rating)
     update_ease_factor(rating)
 
     if rating < 3
@@ -40,7 +47,7 @@ class Card < ApplicationRecord
     end
 
     self.next_review_date = Date.current + interval.days
-    save!
+    self
   end
 
   private

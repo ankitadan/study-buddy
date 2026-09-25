@@ -83,6 +83,35 @@ A card is due when its `next_review_date` is today or earlier. The most overdue 
 
 Each card's page (and the card list) also shows its SM-2 state: next review date, interval, number of successful reviews, and ease factor.
 
+## Progress
+
+The decks page (`/decks`) shows progress for each deck:
+
+* **Due today:** cards that are due now
+* **Total reviews:** how many times cards in the deck have been graded
+* **Study streak:** consecutive days with at least one review in the deck. The streak still counts from yesterday if you haven't studied yet today, and resets after a missed day.
+
+New decks show zeros. Every grade in a study session is saved as a review, and progress is calculated from those reviews.
+
+Click **View Progress** on a deck for its progress page (`/decks/:id/progress`). It shows:
+
+* **Streak status:** 🔥 when you've studied today, or a reminder to "Study today to keep your streak!" when you studied yesterday but not yet today
+* **Stats:** due today, total reviews, current streak, and longest streak
+* **Streak goal:** a bar that fills toward your next milestone (3, 7, 14, or 30 days in a row), with your earned 🏅 badges
+* **Mastery:** one bar for the deck from New → Learning → Mastered, with how many cards are in each stage and what's left: cards to master, about how many more reviews, and at least how many more days if you keep rating Good. A card is Mastered once SM-2 schedules it 21 or more days away.
+* **This week:** a Monday-to-Sunday strip (M T W Th F S S) showing which days you studied and how many cards
+
+When you finish every due card in a study session, a **Session complete!** summary shows how many cards you reviewed, the percentage you remembered, your streak, and your ratings.
+
+Studying several times on the same day still counts as one streak day, and `study:reset` does not change review history. To test longer streaks without waiting, add past-day reviews in development:
+
+```bash
+bin/rails study:backfill_streak              # one review per day for the past 3 days, every deck with cards
+bin/rails study:backfill_streak DAYS=5 DECK_ID=1
+```
+
+Study once today afterwards and the streak becomes DAYS + 1. The task skips days that already have a review, so running it twice does not add duplicates. It refuses to run in production.
+
 ### Making cards due again for testing
 
 After a study session, the graded cards are scheduled for a later date. Two tasks make them due again:

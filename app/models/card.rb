@@ -1,5 +1,18 @@
 class Card < ApplicationRecord
+  RATINGS = {
+    "again" => 0,
+    "hard" => 3,
+    "good" => 4,
+    "easy" => 5
+  }.freeze
+
   belongs_to :deck
+
+  scope :due, lambda {
+    where(next_review_date: nil)
+      .or(where(next_review_date: ..Date.current))
+      .order(:next_review_date, :id)
+  }
 
   validates :question, presence: true
   validates :answer, presence: true

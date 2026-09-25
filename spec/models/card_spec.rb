@@ -198,4 +198,54 @@ it "resets the review sequence after Again" do
   expect(card.next_review_date).to eq(Date.current + 1.day)
 end
   end
+
+  describe ".due" do
+    it "includes cards due today or earlier" do
+      today = deck.cards.create!(question: "Today", answer: "Hoy")
+      overdue = deck.cards.create!(
+        question: "Yesterday",
+        answer: "Ayer",
+        next_review_date: Date.current - 1.day
+      )
+
+      expect(Card.due).to contain_exactly(today, overdue)
+    end
+
+    it "excludes cards scheduled for the future" do
+      deck.cards.create!(
+        question: "Tomorrow",
+        answer: "Manana",
+        next_review_date: Date.current + 1.day
+      )
+
+      expect(Card.due).to be_empty
+    end
+
+    it "treats cards without a review date as due" do
+      card = deck.cards.create!(question: "Hello", answer: "Hola")
+      card.update_column(:next_review_date, nil)
+
+      expect(Card.due).to include(card)
+    end
+
+    it "orders the most overdue cards first" do
+      today = deck.cards.create!(question: "Today", answer: "Hoy")
+      overdue = deck.cards.create!(
+        question: "Last week",
+        answer: "La semana pasada",
+        next_review_date: Date.current - 7.days
+      )
+
+      expect(Card.due.first).to eq(overdue)
+      expect(Card.due.last).to eq(today)
+    end
+
+    it "excludes a card after it is reviewed" do
+      card = deck.cards.create!(question: "Hello", answer: "Hola")
+
+      card.review(Card::RATINGS["again"])
+
+      expect(Card.due).not_to include(card)
+    end
+  end
 end

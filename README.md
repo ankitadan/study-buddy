@@ -8,12 +8,12 @@ StudyBuddy is a Ruby on Rails flashcard app. Learners organize cards into decks,
 
 | Area | What it does |
 | --- | --- |
-| Decks & cards | Create, view, edit, and delete decks and their cards. Questions and answers are required. |
+| Decks & cards | Create, view, edit, and delete decks and their cards. Questions and answers are required, and deleting asks for confirmation first. |
 | Study sessions | Shows only the cards due today or earlier. Reveal the answer, then grade it **Again / Hard / Good / Easy**. |
 | SM-2 scheduling | Each grade updates the card's repetitions, interval, ease factor, and next review date. |
 | Progress | Per deck: cards due, total reviews, study streak, a streak goal, a New → Learning → Mastered bar, and this week's study days. |
 | Session summary | After the last due card: cards reviewed, % remembered, streak, and rating breakdown. |
-| CSV | Export a deck's cards (`GET /decks/:deck_id/cards/export`) and import a deck (`POST /decks/import`). These are endpoints only; no page links to them yet. |
+| CSV import/export | Export any deck with the download icon on **My Decks**. Import a deck from the **Create a New Deck** page. CSV columns: `deck_name, description, question, answer`. |
 
 **Tech stack:** Ruby 3.3 · Rails 8.1 · SQLite · ERB + CSS (no JavaScript) · RSpec · RuboCop
 
@@ -183,7 +183,6 @@ The **mastery bar** runs New → Learning → Mastered. A new card counts as 0%,
 ## Known limitations
 
 - No user accounts: one local database is shared by everyone using the app.
-- CSV import/export has no buttons in the interface yet.
 - Progress is per deck; there are no statistics across all decks.
 - Configured for local development.
 

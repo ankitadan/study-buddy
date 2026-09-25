@@ -1,185 +1,192 @@
 # StudyBuddy
 
-StudyBuddy is a Ruby on Rails flashcard application for organizing study material and reviewing cards using the SM-2 spaced-repetition algorithm. Learners can create decks, manage cards, study cards that are due, self-grade their recall, and view basic progress.
+StudyBuddy is a Ruby on Rails flashcard app. Learners organize cards into decks, study the cards that are due, and grade how well they remembered each one. The **SM-2 spaced-repetition algorithm** then decides when each card comes back, and a progress page shows streaks and how close each deck is to being mastered.
 
-## Team
+**Team:** Tanvi Patel · Ankita Dan
 
-* Tanvi Patel
-* Ankita Dan
+## Features
 
-## Main Features
+| Area | What it does |
+| --- | --- |
+| Decks & cards | Create, view, edit, and delete decks and their cards. Questions and answers are required. |
+| Study sessions | Shows only the cards due today or earlier. Reveal the answer, then grade it **Again / Hard / Good / Easy**. |
+| SM-2 scheduling | Each grade updates the card's repetitions, interval, ease factor, and next review date. |
+| Progress | Per deck: cards due, total reviews, study streak, a streak goal, a New → Learning → Mastered bar, and this week's study days. |
+| Session summary | After the last due card: cards reviewed, % remembered, streak, and rating breakdown. |
+| CSV | Export a deck's cards (`GET /decks/:deck_id/cards/export`) and import a deck (`POST /decks/import`). These are endpoints only; no page links to them yet. |
 
-* Deck and card CRUD
-* Question and answer validation
-* Due-card study sessions
-* Again, Hard, Good, and Easy self-grading
-* SM-2 scheduling using intervals, repetitions, ease factor, and next review dates
-* Progress statistics and study streaks
-* CSV import/export and optional quiz mode
+**Tech stack:** Ruby 3.3 · Rails 8.1 · SQLite · ERB + CSS (no JavaScript) · RSpec · RuboCop
 
-## Technologies Used
-
-* Ruby
-* Ruby on Rails
-* SQLite
-* RSpec
-* HTML/ERB
-* CSS
-* RuboCop
-
-## Requirements
-
-Before setting up the application, make sure you have:
-
-* Ruby
-* Bundler
-* Rails
-* Git
-
-## Setup
-
-Clone the repository and navigate to the project directory:
+## Getting started
 
 ```bash
 git clone https://github.com/ankitadan/study-buddy.git
 cd study-buddy
-```
-
-Install the required dependencies:
-
-```bash
 bundle install
-```
-
-Set up the database:
-
-```bash
 bin/rails db:setup
-```
-
-## Running the Application
-
-Start the Rails server:
-
-```bash
 bin/rails server
 ```
 
-Open the application in a browser at:
+Open **http://localhost:3000/decks**. There is no home page at `/`.
 
-`http://localhost:3000`
+## How a learner uses it
 
-To stop the server, press `Ctrl + C`.
-
-## Studying Due Cards
-
-1. Open a deck and click **Study Due Cards**. The link shows how many cards are due.
-2. Read the question, then click **Show Answer**.
-3. Grade yourself with **Again**, **Hard**, **Good**, or **Easy**.
-4. SM-2 schedules the card's next review, the card leaves the queue, and the next due card appears. A message shows the date SM-2 picked, for example "Next review of "Hello" is September 26, 2026 (in 1 day)."
-5. When every due card has been graded, the page shows "No cards are due for review."
-
-A card is due when its `next_review_date` is today or earlier. The most overdue cards are shown first.
-
-Each card's page (and the card list) also shows its SM-2 state: next review date, interval, number of successful reviews, and ease factor.
-
-## Progress
-
-The decks page (`/decks`) shows progress for each deck:
-
-* **Due today:** cards that are due now
-* **Total reviews:** how many times cards in the deck have been graded
-* **Study streak:** consecutive days with at least one review in the deck. The streak still counts from yesterday if you haven't studied yet today, and resets after a missed day.
-
-New decks show zeros. Every grade in a study session is saved as a review, and progress is calculated from those reviews.
-
-Click **View Progress** on a deck for its progress page (`/decks/:id/progress`). It shows:
-
-* **Streak status:** 🔥 when you've studied today, or a reminder to "Study today to keep your streak!" when you studied yesterday but not yet today
-* **Stats:** due today, total reviews, current streak, and longest streak
-* **Streak goal:** a bar that fills toward your next milestone (3, 7, 14, or 30 days in a row), with your earned 🏅 badges
-* **Mastery:** one bar for the deck from New → Learning → Mastered, with how many cards are in each stage and what's left: cards to master, about how many more reviews, and at least how many more days if you keep rating Good. A card is Mastered once SM-2 schedules it 21 or more days away.
-* **This week:** a Monday-to-Sunday strip (M T W Th F S S) showing which days you studied and how many cards
-
-When you finish every due card in a study session, a **Session complete!** summary shows how many cards you reviewed, the percentage you remembered, your streak, and your ratings.
-
-Studying several times on the same day still counts as one streak day, and `study:reset` does not change review history. To test longer streaks without waiting, add past-day reviews in development:
-
-```bash
-bin/rails study:backfill_streak              # one review per day for the past 3 days, every deck with cards
-bin/rails study:backfill_streak DAYS=5 DECK_ID=1
+```mermaid
+flowchart LR
+    A[My Decks] --> B[Create deck<br/>and add cards]
+    B --> C[Study Due Cards]
+    C --> D[See question]
+    D --> E[Show Answer]
+    E --> F{Grade}
+    F -->|Again / Hard / Good / Easy| G[SM-2 schedules<br/>next review]
+    G --> H{More cards due?}
+    H -->|Yes| D
+    H -->|No| I[Session complete<br/>summary]
+    I --> J[View Progress]
 ```
 
-Study once today afterwards and the streak becomes DAYS + 1. The task skips days that already have a review, so running it twice does not add duplicates. It refuses to run in production.
+## Architecture
 
-### Making cards due again for testing
+StudyBuddy uses standard Rails MVC. Progress calculations live in plain Ruby service objects so controllers stay thin and the rules are easy to unit test.
 
-After a study session, the graded cards are scheduled for a later date. Two tasks make them due again:
+```mermaid
+flowchart TB
+    Browser((Browser))
 
-```bash
-bin/rails study:reset                  # start over: every card becomes a brand-new card, due today
-bin/rails study:reset_due              # keep SM-2 progress, only make every card due today
-bin/rails study:reset DECK_ID=1        # either task can be limited to one deck
+    subgraph Controllers
+        DC[DecksController]
+        CC[CardsController]
+        SSC[StudySessionsController]
+        DPC[DeckProgressController]
+    end
+
+    subgraph Services
+        DP[DeckProgress<br/>streaks, mastery, this week]
+        SS[StudySessionSummary<br/>per-session results]
+    end
+
+    subgraph Models
+        Deck
+        Card[Card<br/>SM-2 scheduling]
+        Review
+    end
+
+    DB[(SQLite)]
+
+    Browser --> DC & CC & SSC & DPC
+    DC & CC --> Deck & Card
+    SSC -->|grade| Card
+    SSC -->|record| Review
+    SSC --> SS
+    DPC --> DP
+    DP & SS --> Deck & Card & Review
+    Deck & Card & Review --> DB
 ```
 
-Use `study:reset` when you want to compare ratings. It sets `repetition = 0`, `interval = 0`, `ease_factor = 2.5`, and `next_review_date = today`.
+### Data model
 
-`study:reset_due` keeps each card's repetitions, interval, and ease factor, so studying again acts as if the right number of days had passed. Intervals grow quickly this way: a card rated Good five times in a row is scheduled 95 days out. Both tasks refuse to run in production.
+```mermaid
+erDiagram
+    DECK ||--o{ CARD : has
+    CARD ||--o{ REVIEW : has
 
-Expected intervals for a new card rated the same way every time:
-
-| Rating | 1st | 2nd | 3rd | 4th | 5th |
-| ------ | --: | --: | --: | --: | --: |
-| Hard   | 1d  | 6d  | 12d | 23d | 41d  |
-| Good   | 1d  | 6d  | 15d | 38d | 95d  |
-| Easy   | 1d  | 6d  | 17d | 49d | 147d |
-
-Again always schedules the card for tomorrow and restarts its sequence. The first two successful reviews are 1 and 6 days for every passing rating, as defined by SM-2.
-
-## Troubleshooting
-
-### `db:migrate` fails with "duplicate column name: repetition"
-
-This happens when your local database already has the SM-2 columns from an older, uncommitted migration, but Rails has no record of `20260924204501_add_sm2_fields_to_cards` being run. Check with:
-
-```bash
-bin/rails db:migrate:status
+    DECK {
+        string name
+        text description
+    }
+    CARD {
+        text question
+        text answer
+        integer repetition "successful reviews in a row"
+        integer interval "days until next review"
+        float ease_factor "starts at 2.5, minimum 1.3"
+        date next_review_date "card is due on or after this date"
+    }
+    REVIEW {
+        integer quality "0, 3, 4 or 5"
+        date reviewed_on
+    }
 ```
 
-If the old versions show `NO FILE` and the SM-2 migration shows `down`, the simplest fix is to rebuild the development database. **This deletes your local decks and cards:**
+A card holds its **current** schedule. A review is the **history**: one row each time a card is graded. Progress and streaks are calculated from reviews. Deleting a deck deletes its cards, and deleting a card deletes its reviews.
 
-```bash
-bin/rails db:reset
+### Routes
+
+| Route | Purpose |
+| --- | --- |
+| `/decks` | All decks with due, reviews, and streak |
+| `/decks/:id` | One deck, browsing its cards one at a time |
+| `/decks/:deck_id/cards` | Card management for a deck |
+| `/decks/:deck_id/study_session` | Study the due cards (`POST .../review` grades one) |
+| `/decks/:deck_id/progress` | Progress page for a deck |
+
+## SM-2 algorithm
+
+Each grade maps to an SM-2 **quality** score `q`:
+
+| Button | q | Meaning |
+| --- | :-: | --- |
+| Again | 0 | Forgot the answer |
+| Hard | 3 | Remembered with real effort |
+| Good | 4 | Remembered normally |
+| Easy | 5 | Remembered instantly |
+
+New cards start with `repetition = 0`, `interval = 0`, `ease_factor = 2.5`, and are due today. Grading a card (`Card#review`) runs these steps:
+
+```mermaid
+flowchart TD
+    S([Grade with quality q]) --> EF["Update ease factor<br/>EF = EF + 0.1 − (5 − q) × (0.08 + (5 − q) × 0.02)<br/>never below 1.3"]
+    EF --> Q{q < 3?}
+    Q -->|"Yes (Again)"| R["repetition = 0<br/>interval = 1 day"]
+    Q -->|"No (Hard, Good, Easy)"| P[repetition + 1]
+    P --> N{repetition}
+    N -->|1| I1[interval = 1 day]
+    N -->|2| I6[interval = 6 days]
+    N -->|3 or more| IM["interval = round(interval × EF)"]
+    R & I1 & I6 & IM --> D([next_review_date = today + interval])
 ```
 
-To keep your local data instead, record the migration as already applied and make the column match `db/schema.rb`:
+The ease factor controls how fast intervals grow. Easy raises it by 0.1, Good leaves it unchanged, Hard lowers it by 0.14, and Again lowers it by 0.8. A card graded the same way every time is scheduled like this:
 
-```bash
-bin/rails runner "ActiveRecord::Base.connection.execute(%q{INSERT INTO schema_migrations (version) VALUES ('20260924204501')})"
-bin/rails runner "c = ActiveRecord::Base.connection; c.change_column_null(:cards, :next_review_date, true); c.change_column_default(:cards, :next_review_date, nil)"
-bin/rails db:migrate
+| Grade | 1st | 2nd | 3rd | 4th | 5th |
+| --- | --: | --: | --: | --: | --: |
+| Again | 1 d | 1 d | 1 d | 1 d | 1 d |
+| Hard | 1 d | 6 d | 12 d | 23 d | 41 d |
+| Good | 1 d | 6 d | 15 d | 38 d | 95 d |
+| Easy | 1 d | 6 d | 17 d | 49 d | 147 d |
+
+Every interval is at least one day, so a graded card always leaves today's study queue.
+
+## Progress and streaks
+
+### Card stages
+
+```mermaid
+stateDiagram-v2
+    direction LR
+    [*] --> New
+    New --> Learning: first review
+    Learning --> Learning: interval under 21 days
+    Learning --> Mastered: interval reaches 21 days
+    Mastered --> Learning: graded Again
 ```
 
-Afterwards, `git diff db/schema.rb` should show no changes.
+The **mastery bar** runs New → Learning → Mastered. A new card counts as 0%, its first review moves it to 25%, and it then climbs to 100% as it completes the Good reviews SM-2 still needs. The deck's bar is the average of its cards. Below the bar, the page estimates what's left: cards to master, reviews, and days, assuming every future grade is Good. It gets these by running SM-2 on unsaved copies of the cards (`Card#schedule`), so nothing is changed.
 
-### `Could not find csv-3.3.6 in locally installed gems`
+### Streaks
 
-Run `bundle install` after pulling changes that update `Gemfile.lock`.
+- A **streak** is the number of days in a row with at least one review in the deck. Several sessions on one day count once.
+- If you studied yesterday but not yet today, the streak is kept and marked **at risk** with a "Study now" link. It resets after a full missed day.
+- The **streak goal** bar fills toward the next milestone: 3, 7, 14, or 30 days.
+- **This week** shows Monday to Sunday (M T W Th F S S), with 🔥 and a review count on each day you studied.
 
-## Known Limitations
+## Known limitations
 
-* The first release supports one local application database and does not include user accounts.
-* Progress analytics are intentionally basic.
-* CSV import/export and quiz mode are stretch features and may not be included in the core release.
-* The application is primarily configured for local development and testing.
+- No user accounts: one local database is shared by everyone using the app.
+- CSV import/export has no buttons in the interface yet.
+- Progress is per deck; there are no statistics across all decks.
+- Configured for local development.
 
-## Project Documentation
+## Project documentation
 
-* [User Stories](docs/user_stories.md)
-* [Testing Plan](docs/testing.md)
-* [Design](docs/design.md)
-* [Backlog](docs/backlog.md)
-* [Planning](docs/planning.md)
-* [Pairing Log](docs/pairing_log.md)
-* [Project Practices](docs/project_practices.md)
-* [Retrospective](docs/retrospective.md)
+[User stories](docs/user_stories.md) · [Design](docs/design.md) · [Planning](docs/planning.md) · [Backlog](docs/backlog.md) · [Testing](docs/testing.md) · [Pairing log](docs/pairing_log.md) · [Project practices](docs/project_practices.md) · [Retrospective](docs/retrospective.md)

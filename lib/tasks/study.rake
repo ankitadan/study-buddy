@@ -24,4 +24,25 @@ namespace :study do
 
     puts "#{count} card(s) were reset to new cards and are due today (#{Date.current})."
   end
+
+  desc "Add one review per day for the past DAYS days (default 3) to test study streaks (optional DECK_ID=1)"
+  task backfill_streak: :environment do
+    days = ENV.fetch("DAYS", "3").to_i
+    abort "DAYS must be 1 or more." if days < 1
+
+    decks = study_cards.includes(:deck).map(&:deck).uniq
+
+    decks.each do |deck|
+      card = deck.cards.order(:id).first
+
+      (1..days).each do |days_ago|
+        date = Date.current - days_ago.days
+        next if deck.reviews.exists?(reviewed_on: date)
+
+        card.reviews.create!(quality: Card::RATINGS["good"], reviewed_on: date)
+      end
+
+      puts "#{deck.name}: study streak is now #{deck.current_streak} day(s)."
+    end
+  end
 end

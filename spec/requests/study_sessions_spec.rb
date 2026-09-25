@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe "Study Sessions", type: :request do
+  include ActiveSupport::Testing::TimeHelpers
+
   let!(:deck) { Deck.create!(name: "Spanish") }
 
   describe "GET /decks/:deck_id/study_session" do
@@ -103,6 +105,34 @@ RSpec.describe "Study Sessions", type: :request do
       end
     end
 
+    it "records the review for progress statistics" do
+      expect {
+        post review_deck_study_session_path(deck),
+             params: { card_id: card.id, rating: "hard" }
+      }.to change(Review, :count).by(1)
+
+      review = Review.last
+      expect(review.card).to eq(card)
+      expect(review.quality).to eq(3)
+      expect(review.reviewed_on).to eq(Date.current)
+    end
+
+    it "does not record a review for an invalid rating" do
+      expect {
+        post review_deck_study_session_path(deck),
+             params: { card_id: card.id, rating: "perfect" }
+      }.not_to change(Review, :count)
+    end
+
+    it "does not record a review for a card that is not due" do
+      card.update!(next_review_date: Date.current + 5.days)
+
+      expect {
+        post review_deck_study_session_path(deck),
+             params: { card_id: card.id, rating: "good" }
+      }.not_to change(Review, :count)
+    end
+
     it "tells the learner when the card is due next" do
       post review_deck_study_session_path(deck),
            params: { card_id: card.id, rating: "good" }
@@ -139,6 +169,65 @@ RSpec.describe "Study Sessions", type: :request do
       follow_redirect!
 
       expect(response.body).to include("No cards are due for review")
+    end
+
+    describe "session summary" do
+      it "shows a summary of the session after the last due card is graded" do
+        deck.cards.create!(question: "Goodbye", answer: "Adios")
+        second = deck.cards.last
+
+        post review_deck_study_session_path(deck), params: { card_id: card.id, rating: "again" }
+        post review_deck_study_session_path(deck), params: { card_id: second.id, rating: "easy" }
+        follow_redirect!
+
+        summary = Nokogiri::HTML(response.body).at_css(".session-summary")
+        expect(summary.text).to include("Session complete!")
+        expect(summary.at_css(".stat-tiles").text.squish)
+          .to eq("Cards reviewed 2 Remembered 50% Study streak 🔥 1 day")
+        expect(summary.at_css(".rating-breakdown").text.squish)
+          .to eq("Again: 1 Hard: 0 Good: 0 Easy: 1")
+        expect(summary.text).to include("The next card is due on #{(Date.current + 1.day).to_fs(:review)}.")
+        expect(summary.at_css("a")["href"]).to eq(deck_progress_path(deck))
+      end
+
+      it "does not count reviews from an earlier session" do
+        card.reviews.create!(quality: 4, reviewed_on: Date.current)
+
+        post review_deck_study_session_path(deck), params: { card_id: card.id, rating: "good" }
+        follow_redirect!
+
+        expect(response.body).to include("Cards reviewed")
+        expect(Nokogiri::HTML(response.body).at_css(".session-summary .stat-tile dd").text).to eq("1")
+      end
+
+      it "shows the summary only once" do
+        post review_deck_study_session_path(deck), params: { card_id: card.id, rating: "good" }
+        follow_redirect!
+        get deck_study_session_path(deck)
+
+        expect(response.body).not_to include("Session complete!")
+        expect(response.body).to include("No cards are due for review. Great job!")
+      end
+
+      it "does not show a summary when nothing was graded" do
+        card.update!(next_review_date: Date.current + 1.day)
+
+        get deck_study_session_path(deck)
+
+        expect(response.body).not_to include("Session complete!")
+      end
+
+      it "discards an unfinished session from an earlier day" do
+        post review_deck_study_session_path(deck), params: { card_id: card.id, rating: "good" }
+
+        travel_to(Date.current + 1.day) do
+          card.update!(next_review_date: Date.current + 5.days)
+
+          get deck_study_session_path(deck)
+
+          expect(response.body).not_to include("Session complete!")
+        end
+      end
     end
 
     it "rejects an invalid rating without changing the card" do

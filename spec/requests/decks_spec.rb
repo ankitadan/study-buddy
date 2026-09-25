@@ -21,6 +21,49 @@ RSpec.describe "Decks", type: :request do
     end
   end
 
+  describe "GET /decks progress" do
+    it "shows an empty-state message when there are no decks" do
+      get decks_path
+
+      expect(response.body).to include("You do not have any decks yet")
+    end
+
+    it "shows zero progress for a new deck" do
+      deck = Deck.create!(name: "Spanish")
+
+      get decks_path
+
+      progress = Nokogiri::HTML(response.body).at_css("##{ActionView::RecordIdentifier.dom_id(deck)} .deck-progress").text.squish
+      expect(progress).to eq("Due today 0 Total reviews 0 Study streak 0 days")
+    end
+
+    it "shows due cards, total reviews, and streak for each deck" do
+      spanish = Deck.create!(name: "Spanish")
+      french = Deck.create!(name: "French")
+      card = spanish.cards.create!(question: "Hello", answer: "Hola")
+      spanish.cards.create!(question: "Goodbye", answer: "Adios")
+      card.reviews.create!(quality: 4, reviewed_on: Date.current)
+      card.reviews.create!(quality: 3, reviewed_on: Date.current - 1.day)
+
+      get decks_path
+
+      page = Nokogiri::HTML(response.body)
+      spanish_progress = page.at_css("##{ActionView::RecordIdentifier.dom_id(spanish)} .deck-progress").text.squish
+      french_progress = page.at_css("##{ActionView::RecordIdentifier.dom_id(french)} .deck-progress").text.squish
+
+      expect(spanish_progress).to eq("Due today 2 Total reviews 2 Study streak 2 days")
+      expect(french_progress).to eq("Due today 0 Total reviews 0 Study streak 0 days")
+    end
+
+    it "links each deck to its study session" do
+      deck = Deck.create!(name: "Spanish")
+
+      get decks_path
+
+      expect(response.body).to include(deck_study_session_path(deck))
+    end
+  end
+
   describe "GET /decks/new" do
     it "returns a successful response" do
       get new_deck_path

@@ -1,0 +1,17 @@
+<%# locals: (progress:, deck:) %>
+<div class="streak-status streak-<%= progress.streak_status %>">
+  <% case progress.streak_status %>
+  <% when :active %>
+    <p><span class="streak-flame" aria-hidden="true">🔥</span>
+      <strong><%= progress.current_streak %>-day streak!</strong>
+      You studied today. Come back tomorrow to keep it going.</p>
+  <% when :at_risk %>
+    <p><span class="streak-flame" aria-hidden="true">⏳</span>
+      <strong>Study today to keep your <%= progress.current_streak %>-day streak!</strong>
+      <%= link_to "Study now", deck_study_session_path(deck) %></p>
+  <% else %>
+    <p><span class="streak-flame" aria-hidden="true">✨</span>
+      <strong>No active streak.</strong>
+      Study this deck today to start one.</p>
+  <% end %>
+</div>

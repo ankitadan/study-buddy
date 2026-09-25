@@ -199,6 +199,21 @@ it "resets the review sequence after Again" do
 end
   end
 
+  describe "#schedule" do
+    it "applies the same SM-2 update as review without saving" do
+      card = deck.cards.create!(question: "Hello", answer: "Hola")
+      reviewed = deck.cards.create!(question: "Hello", answer: "Hola")
+
+      card.schedule(4)
+      reviewed.review(4)
+
+      expect(card.slice(:repetition, :interval, :ease_factor, :next_review_date))
+        .to eq(reviewed.slice(:repetition, :interval, :ease_factor, :next_review_date))
+      expect(card).to be_changed
+      expect(card.reload.repetition).to eq(0)
+    end
+  end
+
   describe ".due" do
     it "includes cards due today or earlier" do
       today = deck.cards.create!(question: "Today", answer: "Hoy")

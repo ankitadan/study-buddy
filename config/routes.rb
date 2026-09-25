@@ -10,6 +10,8 @@ resources :decks do
     post :review
   end
 
+  resource :progress, only: :show, controller: "deck_progress"
+
   collection do
     post :import
   end

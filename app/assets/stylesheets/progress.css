@@ -1,0 +1,287 @@
+/* Deck progress page, streaks, and study session summary. */
+:root {
+  --progress-new: #b8c4d6;
+  --progress-learning: #f2b84b;
+  --progress-mastered: #3a9d5d;
+  --tile-border: #d0d4da;
+  --muted: #555;
+}
+
+.stat-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.stat-tile {
+  border: 1px solid var(--tile-border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  min-width: 120px;
+}
+
+.stat-tile dt {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.stat-tile dd {
+  margin: 4px 0 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.progress-section {
+  margin: 28px 0;
+  max-width: 720px;
+}
+
+.progress-note {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* Streak status */
+.streak-status {
+  border-radius: 10px;
+  padding: 4px 16px;
+  max-width: 720px;
+}
+
+.streak-active {
+  background: #fff4e5;
+  border: 1px solid #f5a623;
+}
+
+.streak-at_risk {
+  background: #fdecea;
+  border: 1px solid #e0605a;
+}
+
+.streak-none {
+  background: #f1f3f5;
+  border: 1px solid var(--tile-border);
+}
+
+.streak-flame {
+  font-size: 22px;
+}
+
+.streak-active .streak-flame {
+  display: inline-block;
+  animation: flicker 1.6s ease-in-out infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.15) rotate(-4deg); }
+}
+
+/* Loading bars for streak goal and mastery */
+.journey {
+  margin: 12px 0;
+}
+
+.journey-track {
+  position: relative;
+  height: 22px;
+  border-radius: 11px;
+  background: #ebedf0;
+  overflow: hidden;
+}
+
+.journey-fill {
+  height: 100%;
+  border-radius: 11px;
+  animation: fill-in 0.8s ease-out;
+}
+
+@keyframes fill-in {
+  from { width: 0; }
+}
+
+.streak-fill {
+  background: linear-gradient(90deg, #f5a623, #e8590c);
+}
+
+/* The gradient covers the whole track so each colour matches its stage;
+   the unfilled part is covered from the right. */
+.mastery-track {
+  background: linear-gradient(
+    90deg,
+    var(--progress-new) 0%,
+    var(--progress-learning) 45%,
+    var(--progress-mastered) 100%
+  );
+}
+
+.journey-remaining {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: #ebedf0;
+  animation: uncover 0.8s ease-out;
+}
+
+@keyframes uncover {
+  from { width: 100%; }
+}
+
+.journey-stage-mark {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 1;
+}
+
+.journey-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.mastery-stages {
+  display: flex;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.mastery-stage {
+  color: var(--muted);
+}
+
+.mastery-stage.stage-learning {
+  flex: 1;
+  padding-left: 6px;
+}
+
+.mastery-stage.stage-mastered {
+  text-align: right;
+}
+
+.mastery-summary {
+  margin: 12px 0 4px;
+}
+
+.mastery-pending {
+  margin: 0;
+  color: var(--muted);
+}
+
+.milestones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+}
+
+.milestone {
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid #e6b800;
+  background: #fff8e1;
+  font-size: 14px;
+}
+
+/* This week strip */
+.week-strip {
+  display: flex;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+}
+
+.week-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 52px;
+}
+
+.week-day-label {
+  font-weight: bold;
+}
+
+.week-day-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--tile-border);
+  background: #f1f3f5;
+  font-size: 20px;
+  transition: transform 0.15s ease;
+}
+
+.week-day:hover .week-day-dot {
+  transform: scale(1.12);
+}
+
+.week-day-studied .week-day-dot {
+  background: #fff4e5;
+  border-color: #f5a623;
+}
+
+.week-day-future {
+  opacity: 0.45;
+}
+
+.week-day-today .week-day-dot {
+  box-shadow: 0 0 0 3px #333;
+}
+
+.week-day-count {
+  font-size: 12px;
+  color: var(--muted);
+  min-height: 16px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Study session summary */
+.session-summary {
+  border: 2px solid var(--progress-mastered);
+  border-radius: 12px;
+  padding: 8px 24px 20px;
+  max-width: 600px;
+  background: #f3faf5;
+  animation: pop-in 0.35s ease-out;
+}
+
+@keyframes pop-in {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.rating-breakdown {
+  display: flex;
+  gap: 16px;
+  list-style: none;
+  padding: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .streak-active .streak-flame,
+  .session-summary,
+  .journey-fill,
+  .journey-remaining {
+    animation: none;
+  }
+}

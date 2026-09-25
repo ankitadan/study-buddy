@@ -43,6 +43,41 @@
         deck_study_session_path(@deck, reveal: true) %>
   <% end %>
 
+<% elsif @summary %>
+  <div class="session-summary">
+    <h2>🎉 Session complete!</h2>
+
+    <dl class="stat-tiles">
+      <div class="stat-tile">
+        <dt>Cards reviewed</dt>
+        <dd><%= @summary.reviewed_count %></dd>
+      </div>
+      <div class="stat-tile">
+        <dt>Remembered</dt>
+        <dd><%= @summary.remembered_percentage %>%</dd>
+      </div>
+      <div class="stat-tile">
+        <dt>Study streak</dt>
+        <dd>🔥 <%= pluralize(@summary.progress.current_streak, "day") %></dd>
+      </div>
+    </dl>
+
+    <ul class="rating-breakdown">
+      <% @summary.rating_counts.each do |rating, count| %>
+        <li class="rating-<%= rating %>">
+          <%= rating.capitalize %>: <strong><%= count %></strong>
+        </li>
+      <% end %>
+    </ul>
+
+    <p>No cards are due for review right now.
+      <% if @summary.next_review_date %>
+        The next card is due on <%= @summary.next_review_date.to_fs(:review) %>.
+      <% end %>
+    </p>
+
+    <%= link_to "View Deck Progress", deck_progress_path(@deck) %>
+  </div>
 <% elsif @deck.cards.any? %>
   <p>No cards are due for review. Great job!</p>
 <% else %>

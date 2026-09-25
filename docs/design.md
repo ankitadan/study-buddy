@@ -36,7 +36,7 @@ Cards are associated with their parent deck through `deck_id`. Deleting a deck a
 
 ## Data Model
 
-The current application contains two primary models.
+The current application contains three models: `Deck`, `Card`, and `Review`.
 
 ### Deck
 
@@ -51,6 +51,7 @@ A deck has many cards:
 
 ```ruby
 has_many :cards, dependent: :destroy
+has_many :reviews, through: :cards
 ```
 
 The `dependent: :destroy` relationship ensures that cards associated with a deck are removed when the deck is deleted.
@@ -73,6 +74,20 @@ belongs_to :deck
 
 The question and answer fields are required, so a card cannot be created without both pieces of information.
 
+A card also has many reviews, which are deleted with the card.
+
+### Review
+
+The `Review` model records each time a learner grades a card in a study session:
+
+* `card_id`
+* `quality` — SM-2 quality score (0, 3, 4, or 5)
+* `reviewed_on` — date of the review
+* `created_at`
+* `updated_at`
+
+Reviews are the source for progress statistics. The card's SM-2 fields describe only its current schedule, so review history is kept separately.
+
 ## Planned Spaced-Repetition Design
 
 The overall project is designed to support spaced-repetition learning using the SM-2 algorithm. This functionality is planned to build on the current Deck and Card structure.
@@ -84,7 +99,7 @@ When scheduling functionality is implemented, the `Card` model can be extended w
 * `ease_factor` — factor used to calculate future intervals
 * `next_review_date` — date on which the card becomes due
 
-Review history can also be stored separately so that previous study sessions can be used for progress statistics.
+Review history is stored separately in the `Review` model so that previous study sessions can be used for progress statistics.
 
 These fields are now part of the Card model. New cards start with `repetition = 0`, `interval = 0`, `ease_factor = 2.5`, and `next_review_date = today`, so they are due immediately.
 
@@ -311,7 +326,7 @@ The main tradeoff is complexity. Leitner is easier to understand and implement b
 
 Deck and card management are the current core features because they provide the foundation for the rest of the application.
 
-Spaced-repetition scheduling and study sessions are now implemented on top of deck and card management. Progress statistics and quiz mode remain future or optional functionality. This allows the team to prioritize a working core application while leaving room for additional features as development continues.
+Spaced-repetition scheduling and study sessions are now implemented on top of deck and card management. Basic per-deck progress statistics are implemented. Expanded analytics and quiz mode remain future or optional functionality. This allows the team to prioritize a working core application while leaving room for additional features as development continues.
 
 ## Current Project Scope
 
@@ -330,6 +345,7 @@ The current implementation provides:
 * Deleting associated cards when a deck is deleted
 * Scheduling reviews with SM-2 (`Card#review`)
 * Study sessions for due cards
+* Per-deck progress statistics on the decks page
 
 The design also provides a foundation for future progress-tracking features.
 
@@ -347,3 +363,43 @@ Study sessions are handled by `StudySessionsController`, a singular resource nes
 * The study queue is not stored separately. Grading a card calls `Card#review`, which always moves `next_review_date` at least one day ahead, so the card drops out of `Card.due` automatically.
 * The controller rejects unknown ratings, cards that are not due (such as a double-submitted grade), and cards from another deck without changing them.
 * `bin/rails study:reset` resets cards to new-card SM-2 values, and `bin/rails study:reset_due` makes cards due today while keeping their SM-2 progress, so the study flow can be tested repeatedly in development.
+
+## Progress Statistics
+
+Progress is shown per deck on the decks page (`/decks`), so learners can see at a glance which decks need attention. Each deck shows:
+
+* **Due today** — `Deck#due_cards_count`, the number of cards whose `next_review_date` is today or earlier.
+* **Total reviews** — `Deck#reviews_count`, every grade recorded in the deck. A card graded three times counts three times.
+* **Study streak** — `Deck#current_streak`, the number of consecutive days with at least one review in the deck. Several reviews on one day count as one day. The streak still counts from yesterday if the learner has not studied yet today, and it resets to zero once a full day is missed.
+
+Grading a card in a study session updates the card with SM-2 and creates a `Review` in the same transaction, so the schedule and the history stay consistent. Rejected grades create no review.
+
+New decks and decks with no reviews show zeros. When there are no decks, the page shows an empty-state message with a link to create one.
+
+### Deck Progress Page
+
+Each deck has a detailed progress page at `GET /decks/:deck_id/progress` (`DeckProgressController#show`), linked from the decks page and the deck page. The calculations live in the `DeckProgress` service (`app/services/deck_progress.rb`), so controllers and views stay simple and the rules can be unit tested.
+
+The page shows:
+
+* **Streak status** — one of three states:
+  * *Active* (🔥): the learner studied today.
+  * *At risk* (⏳): the learner studied yesterday but not yet today. The message links straight to the study session.
+  * *None*: no current streak.
+* **Stat tiles** — due today, total reviews, current streak, and longest streak.
+* **Streak goal** — a loading bar that fills toward the next milestone (3, 7, 14, or 30 days), e.g. "Day 2" of a "3-day streak", with the number of days still needed. Earned milestones are shown as 🏅 badges next to it. Badges are earned from the *longest* streak, so they are kept after a streak ends, and badges not yet earned are not shown.
+* **Mastery** — one loading bar for the whole deck that runs from **New** on the left, through **Learning**, to **Mastered** on the right, because a card cannot reach Learning without leaving New first:
+  * Each card has a progress value. A new card (interval 0) is at 0%. Its first review moves it to the start of Learning at 25%, and it then moves toward 100% as it completes the successful reviews SM-2 needs. A card is Mastered (100%) once its interval is 21 days or more, the "mature" threshold used by Anki.
+  * The deck's bar is the average of its cards. The counts of New, Learning, and Mastered cards are shown under the matching part of the bar.
+  * Underneath, the page shows what is still pending: cards left to master, about how many more reviews, and at least how many more days, assuming every future review is rated Good. The number of days is set by the slowest card.
+  * To estimate this, `DeckProgress` runs Good reviews on an unsaved copy of each card using `Card#schedule` until its interval reaches 21 days. `Card#schedule` holds the unchanged SM-2 calculation; `Card#review` calls it and then saves, so the SM-2 algorithm itself was not changed.
+* **This week** — a Monday-to-Sunday strip (M T W Th F S S). Studied days show 🔥 with the number of reviews, today is outlined, and future days are faded. Hovering a day shows its date and review count.
+
+Everything is server-rendered HTML and CSS with no JavaScript, because the project does not load any JavaScript. Hover effects and animations use CSS only and are turned off for users who prefer reduced motion.
+
+### Session-Complete Summary
+
+When the last due card in a session is graded, the study page shows a summary instead of the plain "no cards due" message: the number of cards reviewed, the percentage remembered (Hard, Good, or Easy), the current streak, a breakdown by rating, the next review date in the deck, and a link to the progress page.
+
+To summarize only the current session, `StudySessionsController` stores the IDs of the reviews it creates in the Rails session, keyed by deck and date. The summary (`StudySessionSummary`) is built from those IDs, shown once, and then cleared. An unfinished session from an earlier day is discarded, so an old session is never mixed into today's summary.
+

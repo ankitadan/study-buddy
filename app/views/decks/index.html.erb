@@ -1,4 +1,5 @@
 <p style="color: green"><%= notice %></p>
+<p style="color: red"><%= alert %></p>
 
 <h1>My Decks</h1>
 
@@ -9,7 +10,17 @@
 
   <% @decks.each do |deck| %>
     <div class="deck-summary" id="<%= dom_id deck %>">
-      <h2><%= deck.name %></h2>
+      <div class="deck-header">
+        <h2><%= deck.name %></h2>
+
+        <%= link_to export_deck_cards_path(deck),
+            class: "icon-button",
+            download: "",
+            title: "Export \"#{deck.name}\" as CSV",
+            aria: { label: "Export #{deck.name} as CSV" } do %>
+          <%= icon(:download) %>
+        <% end %>
+      </div>
       <p><%= deck.description %></p>
 
       <dl class="deck-progress">
@@ -31,12 +42,14 @@
       <%= link_to "Study Due Cards", deck_study_session_path(deck) %> |
       <%= link_to "View Progress", deck_progress_path(deck) %>
 
-      <%= button_to "Delete Deck",
-          deck_path(deck),
-          method: :delete,
-          data: { turbo_confirm: "Are you sure you want to delete this deck?" } %>
+      <%= delete_button "Delete Deck", deck_path(deck),
+          confirm: "Delete the deck \"#{deck.name}\" and all its cards?" %>
     </div>
   <% end %>
 </div>
 
-<%= link_to "Create New Deck", new_deck_path %>
+<div class="deck-actions">
+  <%= link_to new_deck_path, class: "icon-button icon-button-labeled" do %>
+    <%= icon(:plus) %> Create New Deck
+  <% end %>
+</div>

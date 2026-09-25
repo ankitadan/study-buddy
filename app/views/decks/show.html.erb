@@ -31,10 +31,8 @@
       <%= link_to "Edit Card",
           edit_deck_card_path(@deck, @card) %>
 
-      <%= button_to "Delete Card",
-          deck_card_path(@deck, @card),
-          method: :delete,
-          data: { turbo_confirm: "Delete this card?" } %>
+      <%= delete_button "Delete Card", deck_card_path(@deck, @card),
+          confirm: "Delete this card?" %>
     </div>
   </div>
 
@@ -68,7 +66,5 @@
 
 <br><br>
 
-<%= button_to "Delete This Deck",
-    deck_path(@deck),
-    method: :delete,
-    data: { turbo_confirm: "Delete this deck and all its cards?" } %>
+<%= delete_button "Delete This Deck", deck_path(@deck),
+    confirm: "Delete this deck and all its cards?" %>

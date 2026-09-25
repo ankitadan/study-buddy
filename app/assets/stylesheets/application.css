@@ -58,3 +58,58 @@
   font-size: 20px;
   font-weight: bold;
 }
+
+.deck-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.deck-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 8px;
+  border: 1px solid #c3c8cf;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.icon-button:hover {
+  background: #f1f3f5;
+  border-color: #8a929c;
+}
+
+.icon-button:focus-visible,
+.icon-button:focus-within {
+  outline: 2px solid #1a73e8;
+  outline-offset: 2px;
+}
+
+.icon-button-labeled {
+  padding: 0 12px;
+}
+
+.import-form {
+  display: inline;
+}
+
+.import-option {
+  margin: 20px 0;
+}

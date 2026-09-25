@@ -31,6 +31,8 @@ Update this file as work progresses. Items are grouped by priority and status.
 * ✅ Review and refine the Deck and Card functionality
 * ✅ Review automated tests and add missing test cases
 * ✅ Review project documentation against the implemented functionality
+* ✅ Add CSV import/export (export icon on My Decks, import on the new-deck page)
+* ✅ Fix delete confirmation for decks and cards (Turbo is not loaded, so `turbo_confirm` was ignored)
 
 ## To Do: Essential
 
@@ -38,7 +40,6 @@ Update this file as work progresses. Items are grouped by priority and status.
 
 ## To Do: Stretch Features
 
-* ⬜ Add CSV import/export
 * ⬜ Add quiz mode and combo scoring
 * ⬜ Add expanded analytics
 

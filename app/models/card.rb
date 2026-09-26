@@ -26,7 +26,7 @@ class Card < ApplicationRecord
   end
 
   # Applies SM-2 without saving, so progress forecasts can simulate reviews.
-  def schedule(rating)
+  def schedule(rating, today: Date.current)
     update_ease_factor(rating)
 
     if rating < 3
@@ -46,7 +46,7 @@ class Card < ApplicationRecord
         end
     end
 
-    self.next_review_date = Date.current + interval.days
+    self.next_review_date = today + interval.days
     self
   end
 

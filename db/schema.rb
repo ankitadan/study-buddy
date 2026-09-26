@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_25_155030) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_26_010206) do
   create_table "cards", force: :cascade do |t|
     t.text "answer"
     t.datetime "created_at", null: false
@@ -29,6 +29,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_25_155030) do
     t.text "description"
     t.string "name"
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_decks_on_name", unique: true
   end
 
   create_table "reviews", force: :cascade do |t|

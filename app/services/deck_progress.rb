@@ -163,11 +163,16 @@ class DeckProgress
   # reaches the mastered threshold.
   def mastery_forecast(card)
     simulated = card.dup
-    days = [ ((card.next_review_date || today) - today).to_i, 0 ].max
+    days =
+  if card.interval.zero?
+    0
+  else
+    [ ((card.next_review_date || today) - today).to_i, 0 ].max
+  end
     reviews = 0
 
     while simulated.interval < MASTERED_INTERVAL && reviews < MAX_SIMULATED_REVIEWS
-      simulated.schedule(Card::RATINGS["good"])
+      simulated.schedule(Card::RATINGS["good"], today: today)
       reviews += 1
       # Days until the next simulated review, unless this review mastered the card.
       days += simulated.interval if simulated.interval < MASTERED_INTERVAL

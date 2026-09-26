@@ -67,6 +67,50 @@ def export
             filename: "#{@deck.name.parameterize}-cards.csv",
             type: "text/csv"
 end
+def import
+  require "csv"
+
+  file = params[:file]
+
+  unless file
+    redirect_to deck_path(@deck),
+                alert: "Please select a CSV file."
+    return
+  end
+
+  csv = CSV.parse(file.read.force_encoding("UTF-8"), headers: true)
+
+  required_headers = %w[question answer]
+
+  unless required_headers.all? { |header| csv.headers.include?(header) }
+    redirect_to deck_path(@deck),
+                alert: "Invalid CSV format."
+    return
+  end
+
+  cards = []
+
+  csv.each do |row|
+    if row["question"].blank? || row["answer"].blank?
+      redirect_to deck_path(@deck),
+                  alert: "Question and answer cannot be blank."
+      return
+    end
+
+    cards << @deck.cards.build(
+      question: row["question"],
+      answer: row["answer"]
+    )
+  end
+
+  cards.each(&:save!)
+
+  redirect_to deck_path(@deck),
+              notice: "Cards were successfully imported."
+rescue CSV::MalformedCSVError
+  redirect_to deck_path(@deck),
+              alert: "Invalid CSV file."
+end
   private
 
   def set_deck

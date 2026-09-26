@@ -2,7 +2,7 @@ class Deck < ApplicationRecord
   has_many :cards, dependent: :destroy
   has_many :reviews, through: :cards
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
 
   def due_cards_count
     cards.due.count

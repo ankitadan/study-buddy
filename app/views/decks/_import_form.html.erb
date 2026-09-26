@@ -1,7 +1,7 @@
-<%= form_with url: import_decks_path, multipart: true, class: "import-form" do |form| %>
+<%= form_with url: import_deck_cards_path(@deck), multipart: true, class: "import-form" do |form| %>
   <label class="icon-button icon-button-labeled"
-         title="CSV columns: deck_name, description, question, answer">
-    <%= icon(:upload) %> Import Deck (CSV)
+         title="CSV columns: question, answer">
+    <%= icon(:upload) %> Import Cards (CSV)
     <%= form.file_field :file,
         accept: ".csv,text/csv",
         class: "visually-hidden",

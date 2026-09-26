@@ -22,7 +22,13 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   </head>
 
-  <body>
-    <%= yield %>
-  </body>
+<body>
+  <% flash.each do |type, message| %>
+    <div class="flash <%= type %>">
+      <%= message %>
+    </div>
+  <% end %>
+
+  <%= yield %>
+</body>
 </html>

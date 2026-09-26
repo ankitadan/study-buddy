@@ -8,7 +8,7 @@
       deck_study_session_path(@deck) %> |
   <%= link_to "View Progress", deck_progress_path(@deck) %>
 </div>
-
+<%= render "import_form" %>
 <hr>
 
 <% if @card %>

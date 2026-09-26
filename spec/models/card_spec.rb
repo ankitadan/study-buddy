@@ -215,6 +215,7 @@ end
   end
 
   describe ".due" do
+    before { Card.delete_all }
     it "includes cards due today or earlier" do
       today = deck.cards.create!(question: "Today", answer: "Hoy")
       overdue = deck.cards.create!(

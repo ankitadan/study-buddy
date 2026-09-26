@@ -23,6 +23,7 @@ RSpec.describe "Decks", type: :request do
 
   describe "GET /decks progress" do
     it "shows an empty-state message when there are no decks" do
+      Deck.destroy_all
       get decks_path
 
       expect(response.body).to include("You do not have any decks yet")

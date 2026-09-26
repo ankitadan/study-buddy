@@ -8,9 +8,9 @@
       "RSpec"
     ],
     "project_name": "Study-buddy",
-    "timestamp": "2026-09-25T21:18:04.151-05:00",
+    "timestamp": "2026-09-25T21:48:40.827-05:00",
     "root": "/Users/ankitadan/Documents/study-buddy/study-buddy",
-    "commit": "d3e1470618ef4ce1d5325f1f5f82bb74bacb86f4",
+    "commit": "5f71eecc8136f9565ce598e83a7844b2066d4f5a",
     "primary_coverage": "line",
     "line_coverage": true,
     "branch_coverage": true,
@@ -23,14 +23,14 @@
       "omitted": 339,
       "total": 302,
       "percent": 99.66887417218543,
-      "strength": 24.1523178807947
+      "strength": 25.105960264900663
     },
     "branches": {
       "covered": 60,
       "missed": 1,
       "total": 61,
       "percent": 98.36065573770492,
-      "strength": 21.475409836065573
+      "strength": 21.770491803278688
     }
   },
   "coverage": {
@@ -935,7 +935,7 @@
         null,
         null,
         1,
-        37,
+        55,
         null,
         null,
         null,
@@ -946,7 +946,7 @@
         null,
         null,
         1,
-        43,
+        61,
         null,
         null,
         null,
@@ -1107,7 +1107,7 @@
         1,
         null,
         1,
-        78,
+        96,
         null,
         null,
         null,
@@ -1246,18 +1246,18 @@
         1,
         null,
         1,
-        12,
+        30,
         null,
         null,
         1,
-        13,
+        31,
         null,
         null,
         null,
         null,
         null,
         1,
-        18,
+        36,
         null,
         null
       ],
@@ -1476,7 +1476,7 @@
         "    reviews = 0",
         "",
         "    while simulated.interval < MASTERED_INTERVAL && reviews < MAX_SIMULATED_REVIEWS",
-        "      simulated.schedule(Card::RATINGS[\"good\"],today: today)",
+        "      simulated.schedule(Card::RATINGS[\"good\"], today: today)",
         "      reviews += 1",
         "      # Days until the next simulated review, unless this review mastered the card.",
         "      days += simulated.interval if simulated.interval < MASTERED_INTERVAL",
@@ -1525,8 +1525,8 @@
         1,
         null,
         1,
-        53,
-        53,
+        71,
+        71,
         null,
         null,
         1,
@@ -1584,15 +1584,15 @@
         null,
         null,
         1,
-        156,
-        156,
+        174,
+        174,
         null,
-        156,
+        174,
         427,
         427,
         null,
         null,
-        156,
+        174,
         null,
         null,
         1,
@@ -1620,7 +1620,7 @@
         null,
         null,
         1,
-        174,
+        192,
         null,
         null,
         null,
@@ -1705,11 +1705,11 @@
         null,
         null,
         1,
-        181,
+        199,
         null,
         null,
         1,
-        810,
+        846,
         null,
         null
       ],
@@ -1763,7 +1763,7 @@
           "type": "else",
           "start_line": 77,
           "end_line": 77,
-          "coverage": 80,
+          "coverage": 98,
           "inline": true,
           "report_line": 77
         },
@@ -2067,7 +2067,7 @@
         "omitted": 23,
         "total": 8,
         "percent": 100.0,
-        "strength": 10.75
+        "strength": 15.25
       },
       "branches": {
         "covered": 0,
@@ -2089,7 +2089,7 @@
         "omitted": 49,
         "total": 47,
         "percent": 100.0,
-        "strength": 26.04255319148936
+        "strength": 27.574468085106382
       },
       "branches": {
         "covered": 5,
@@ -2112,14 +2112,14 @@
         "omitted": 122,
         "total": 116,
         "percent": 100.0,
-        "strength": 43.89655172413793
+        "strength": 45.44827586206897
       },
       "branches": {
         "covered": 27,
         "missed": 1,
         "total": 28,
         "percent": 96.42857142857143,
-        "strength": 35.5
+        "strength": 36.142857142857146
       },
       "files": [
         "app/services/deck_progress.rb",
@@ -4390,6 +4390,261 @@
       "created_at": "2026-09-26T02:18:04Z",
       "branch": "ankita-dan-changes",
       "commit": "d3e1470618ef4ce1d5325f1f5f82bb74bacb86f4",
+      "totals": {
+        "line": 99.66,
+        "branch": 98.36
+      },
+      "groups": {
+        "Controllers": {
+          "line": 99.23,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Ungrouped": {
+          "line": 100.0,
+          "branch": 96.42
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/cards_controller.rb": {
+          "line": 98.24,
+          "branch": 100.0
+        },
+        "app/controllers/deck_progress_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/decks_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/study_sessions_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/cards_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/decks_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/card.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/deck.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/review.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/services/deck_progress.rb": {
+          "line": 100.0,
+          "branch": 96.15
+        },
+        "app/services/study_session_summary.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-26T02:45:04Z",
+      "branch": "ankita-dan-changes",
+      "commit": "5f71eecc8136f9565ce598e83a7844b2066d4f5a",
+      "totals": {
+        "line": 16.55,
+        "branch": 8.19
+      },
+      "groups": {
+        "Controllers": {
+          "line": 0.0,
+          "branch": 0.0
+        },
+        "Helpers": {
+          "line": 75.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 93.61,
+          "branch": 100.0
+        },
+        "Ungrouped": {
+          "line": 0.0,
+          "branch": 0.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/controllers/cards_controller.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        },
+        "app/controllers/deck_progress_controller.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/controllers/decks_controller.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        },
+        "app/controllers/study_sessions_controller.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 66.66,
+          "branch": 100.0
+        },
+        "app/helpers/cards_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/decks_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/card.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/deck.rb": {
+          "line": 70.0,
+          "branch": 100.0
+        },
+        "app/models/review.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/services/deck_progress.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        },
+        "app/services/study_session_summary.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-26T02:48:23Z",
+      "branch": "ankita-dan-changes",
+      "commit": "5f71eecc8136f9565ce598e83a7844b2066d4f5a",
+      "totals": {
+        "line": 39.07,
+        "branch": 14.75
+      },
+      "groups": {
+        "Controllers": {
+          "line": 25.19,
+          "branch": 21.42
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 65.95,
+          "branch": 0.0
+        },
+        "Ungrouped": {
+          "line": 39.65,
+          "branch": 10.71
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/cards_controller.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        },
+        "app/controllers/deck_progress_controller.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/controllers/decks_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/study_sessions_controller.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/cards_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/decks_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/card.rb": {
+          "line": 48.38,
+          "branch": 0.0
+        },
+        "app/models/deck.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/review.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/services/deck_progress.rb": {
+          "line": 46.46,
+          "branch": 11.53
+        },
+        "app/services/study_session_summary.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-26T02:48:40Z",
+      "branch": "ankita-dan-changes",
+      "commit": "5f71eecc8136f9565ce598e83a7844b2066d4f5a",
       "totals": {
         "line": 99.66,
         "branch": 98.36

@@ -1,5 +1,13 @@
 <h1>Create a New Deck</h1>
-
+<% if @deck.errors.any? %>
+  <div class="errors">
+    <ul>
+      <% @deck.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
 <%= form_with model: @deck do |form| %>
   <div>
     <%= form.label :name %>
@@ -16,9 +24,5 @@
   </div>
 <% end %>
 
-<div class="import-option">
-  <p>Or import a deck from a CSV file:</p>
-  <%= render "decks/import_form" %>
-</div>
 
 <%= link_to "Back to Decks", decks_path %>

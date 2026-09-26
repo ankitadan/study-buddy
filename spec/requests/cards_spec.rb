@@ -285,4 +285,190 @@ it "exports cards containing newlines" do
   expect(response.body).to include("It is used with Rails.")
  end
   end
+  describe "POST /decks/:deck_id/cards/import" do
+it "imports cards into the existing deck" do
+  csv = <<~CSV
+    question,answer
+    What is Ruby?,A programming language
+    What is Rails?,A web framework
+  CSV
+
+  file = Tempfile.new([ "cards", ".csv" ])
+  file.write(csv)
+  file.rewind
+
+  expect do
+    post import_deck_cards_path(deck), params: {
+      file: Rack::Test::UploadedFile.new(file.path, "text/csv")
+    }
+  end.to change(Card, :count).by(2)
+
+  expect(response).to redirect_to(deck_path(deck))
+
+  file.close
+  file.unlink
+end
+it "imports cards into the selected deck" do
+  other_deck = Deck.create!(name: "French")
+
+  csv = <<~CSV
+    question,answer
+    Hello,Hola
+  CSV
+
+  file = Tempfile.new([ "cards", ".csv" ])
+  file.write(csv)
+  file.rewind
+
+  post import_deck_cards_path(deck), params: {
+    file: Rack::Test::UploadedFile.new(file.path, "text/csv")
+  }
+
+  imported_card = Card.find_by(question: "Hello")
+
+  expect(imported_card.deck).to eq(deck)
+  expect(imported_card.deck).not_to eq(other_deck)
+
+  file.close
+  file.unlink
+end
+it "does not import when no file is provided" do
+  expect do
+    post import_deck_cards_path(deck)
+  end.not_to change(Card, :count)
+
+  expect(response).to redirect_to(deck_path(deck))
+end
+it "does not import a CSV with missing required headers" do
+  csv = <<~CSV
+    question,wrong_header
+    What is Ruby?,A programming language
+  CSV
+
+  file = Tempfile.new([ "cards", ".csv" ])
+  file.write(csv)
+  file.rewind
+
+  expect do
+    post import_deck_cards_path(deck), params: {
+      file: Rack::Test::UploadedFile.new(file.path, "text/csv")
+    }
+  end.not_to change(Card, :count)
+
+  expect(response).to redirect_to(deck_path(deck))
+
+  file.close
+  file.unlink
+end
+it "does not import when a question is blank" do
+  csv = <<~CSV
+    question,answer
+    ,A programming language
+  CSV
+
+  file = Tempfile.new([ "cards", ".csv" ])
+  file.write(csv)
+  file.rewind
+
+  expect do
+    post import_deck_cards_path(deck), params: {
+      file: Rack::Test::UploadedFile.new(file.path, "text/csv")
+    }
+  end.not_to change(Card, :count)
+
+  expect(response).to redirect_to(deck_path(deck))
+
+  file.close
+  file.unlink
+end
+it "does not import when an answer is blank" do
+  csv = <<~CSV
+    question,answer
+    What is Ruby?,
+  CSV
+
+  file = Tempfile.new([ "cards", ".csv" ])
+  file.write(csv)
+  file.rewind
+
+  expect do
+    post import_deck_cards_path(deck), params: {
+      file: Rack::Test::UploadedFile.new(file.path, "text/csv")
+    }
+  end.not_to change(Card, :count)
+
+  expect(response).to redirect_to(deck_path(deck))
+
+  file.close
+  file.unlink
+end
+it "imports cards containing commas" do
+  csv = <<~CSV
+    question,answer
+    "What is Ruby, exactly?","A programming language, mainly."
+  CSV
+
+  file = Tempfile.new([ "cards", ".csv" ])
+  file.write(csv)
+  file.rewind
+
+  post import_deck_cards_path(deck), params: {
+    file: Rack::Test::UploadedFile.new(file.path, "text/csv")
+  }
+
+  card = deck.cards.find_by(question: "What is Ruby, exactly?")
+
+  expect(card).not_to be_nil
+  expect(card.answer).to eq("A programming language, mainly.")
+
+  file.close
+  file.unlink
+end
+it "imports cards containing quotes" do
+  csv = <<~CSV
+    question,answer
+    "What does ""Ruby"" mean?","It is a ""programming language""."
+  CSV
+
+  file = Tempfile.new([ "cards", ".csv" ])
+  file.write(csv)
+  file.rewind
+
+  post import_deck_cards_path(deck), params: {
+    file: Rack::Test::UploadedFile.new(file.path, "text/csv")
+  }
+
+  card = deck.cards.find_by(question: 'What does "Ruby" mean?')
+
+  expect(card).not_to be_nil
+  expect(card.answer).to eq('It is a "programming language".')
+
+  file.close
+  file.unlink
+end
+it "imports cards containing newlines" do
+  csv = <<~CSV
+    question,answer
+    "What is Ruby?
+    Give one example.","A programming language.
+    It is used with Rails."
+  CSV
+
+  file = Tempfile.new([ "cards", ".csv" ])
+  file.write(csv)
+  file.rewind
+
+  post import_deck_cards_path(deck), params: {
+    file: Rack::Test::UploadedFile.new(file.path, "text/csv")
+  }
+
+  card = deck.cards.find_by(question: "What is Ruby?\nGive one example.")
+
+  expect(card).not_to be_nil
+  expect(card.answer).to eq("A programming language.\nIt is used with Rails.")
+
+  file.close
+  file.unlink
+end
+end
 end

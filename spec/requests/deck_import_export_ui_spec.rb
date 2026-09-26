@@ -32,31 +32,29 @@ RSpec.describe "Deck import, export, and delete controls", type: :request do
     end
   end
 
-  describe "import option" do
-    it "is not shown on the decks page" do
-      get decks_path
+describe "import option" do
+  it "is shown on the deck page" do
+    deck = Deck.create!(name: "Spanish")
 
-      expect(page.at_css(".deck-actions a[href='#{new_deck_path}']").text).to include("Create New Deck")
-      expect(page.at_css("form.import-form")).to be_nil
-    end
+    get deck_path(deck)
 
-    it "is shown on the new deck page" do
-      get new_deck_path
-
-      form = page.at_css(".import-option form.import-form")
-      expect(form["action"]).to eq(import_decks_path)
-      expect(form["enctype"]).to eq("multipart/form-data")
-      expect(form.at_css("input[type=file][name=file]")["accept"]).to eq(".csv,text/csv")
-      expect(form.text).to include("Import Deck (CSV)")
-    end
-
-    it "shows import errors on the decks page" do
-      post import_decks_path
-      follow_redirect!
-
-      expect(page.text).to include("Please select a CSV file.")
-    end
+    form = page.at_css("form.import-form")
+    expect(form).to be_present
+    expect(form["action"]).to eq(import_deck_cards_path(deck))
+    expect(form["enctype"]).to eq("multipart/form-data")
+    expect(form.at_css("input[type=file][name=file]")["accept"]).to eq(".csv,text/csv")
+    expect(form.text).to include("Import Cards (CSV)")
   end
+
+  it "shows import errors on the deck page" do
+    deck = Deck.create!(name: "Spanish")
+
+    post import_deck_cards_path(deck)
+    follow_redirect!
+
+    expect(page.text).to include("Please select a CSV file.")
+  end
+end
 
   describe "delete confirmation" do
     let!(:deck) { Deck.create!(name: "Spanish") }

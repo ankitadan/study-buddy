@@ -3,6 +3,7 @@ resources :decks do
   resources :cards do
     collection do
       get :export
+      post :import
     end
   end
 
@@ -11,10 +12,6 @@ resources :decks do
   end
 
   resource :progress, only: :show, controller: "deck_progress"
-
-  collection do
-    post :import
-  end
 end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

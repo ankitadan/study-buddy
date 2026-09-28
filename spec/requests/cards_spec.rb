@@ -360,10 +360,14 @@ it "does not import a CSV with missing required headers" do
   file.close
   file.unlink
 end
-it "does not import when a question is blank" do
+it "partially imports when some records are invalid" do
   csv = <<~CSV
     question,answer
-    ,A programming language
+    What is Ruby?,A programming language
+    What is Rails?,A web application framework
+    ,An invalid record with no question
+    What is MVC?,Model View Controller
+    What is SQL?,
   CSV
 
   file = Tempfile.new([ "cards", ".csv" ])
@@ -374,17 +378,30 @@ it "does not import when a question is blank" do
     post import_deck_cards_path(deck), params: {
       file: Rack::Test::UploadedFile.new(file.path, "text/csv")
     }
-  end.not_to change(Card, :count)
+  end.to change(Card, :count).by(3)
 
   expect(response).to redirect_to(deck_path(deck))
+
+  expect(deck.cards.pluck(:question)).to include(
+    "What is Ruby?",
+    "What is Rails?",
+    "What is MVC?"
+  )
+
+  expect(deck.cards.pluck(:question)).not_to include("")
+
+  expect(flash[:notice]).to include("3 cards were imported")
+  expect(flash[:notice]).to include("2 records were not imported")
 
   file.close
   file.unlink
 end
-it "does not import when an answer is blank" do
+it "skips a card when the answer is blank but imports valid cards" do
   csv = <<~CSV
     question,answer
-    What is Ruby?,
+    What is Ruby?,A programming language
+    What is Rails?,
+    What is MVC?,Model View Controller
   CSV
 
   file = Tempfile.new([ "cards", ".csv" ])
@@ -395,9 +412,19 @@ it "does not import when an answer is blank" do
     post import_deck_cards_path(deck), params: {
       file: Rack::Test::UploadedFile.new(file.path, "text/csv")
     }
-  end.not_to change(Card, :count)
+  end.to change(Card, :count).by(2)
 
   expect(response).to redirect_to(deck_path(deck))
+
+  expect(deck.cards.pluck(:question)).to include(
+    "What is Ruby?",
+    "What is MVC?"
+  )
+
+  expect(deck.cards.pluck(:question)).not_to include("What is Rails?")
+
+  expect(flash[:notice]).to include("2 cards were imported")
+  expect(flash[:notice]).to include("1 records were not imported")
 
   file.close
   file.unlink

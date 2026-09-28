@@ -3,8 +3,7 @@
   --progress-new: #b8c4d6;
   --progress-learning: #f2b84b;
   --progress-mastered: #3a9d5d;
-  --tile-border: #d0d4da;
-  --muted: #555;
+  --tile-border: #d6d6d0;
 }
 
 .stat-tiles {
@@ -16,9 +15,10 @@
 
 .stat-tile {
   border: 1px solid var(--tile-border);
-  border-radius: 10px;
-  padding: 12px 16px;
+  border-radius: 6px;
+  padding: 10px 16px;
   min-width: 120px;
+  background: #fff;
 }
 
 .stat-tile dt {
@@ -44,8 +44,8 @@
 
 /* Streak status */
 .streak-status {
-  border-radius: 10px;
-  padding: 4px 16px;
+  border-radius: 6px;
+  padding: 2px 16px;
   max-width: 720px;
 }
 
@@ -65,17 +65,7 @@
 }
 
 .streak-flame {
-  font-size: 22px;
-}
-
-.streak-active .streak-flame {
-  display: inline-block;
-  animation: flicker 1.6s ease-in-out infinite;
-}
-
-@keyframes flicker {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  50% { transform: scale(1.15) rotate(-4deg); }
+  font-size: 20px;
 }
 
 /* Loading bars for streak goal and mastery */
@@ -85,15 +75,15 @@
 
 .journey-track {
   position: relative;
-  height: 22px;
-  border-radius: 11px;
-  background: #ebedf0;
+  height: 16px;
+  border-radius: 4px;
+  background: #ebebe6;
   overflow: hidden;
 }
 
 .journey-fill {
   height: 100%;
-  border-radius: 11px;
+  border-radius: 4px;
   animation: fill-in 0.8s ease-out;
 }
 
@@ -102,7 +92,7 @@
 }
 
 .streak-fill {
-  background: linear-gradient(90deg, #f5a623, #e8590c);
+  background: #e8890c;
 }
 
 /* The gradient covers the whole track so each colour matches its stage;
@@ -121,7 +111,7 @@
   top: 0;
   right: 0;
   bottom: 0;
-  background: #ebedf0;
+  background: #ebebe6;
   animation: uncover 0.8s ease-out;
 }
 
@@ -218,13 +208,8 @@
   height: 40px;
   border-radius: 50%;
   border: 2px solid var(--tile-border);
-  background: #f1f3f5;
-  font-size: 20px;
-  transition: transform 0.15s ease;
-}
-
-.week-day:hover .week-day-dot {
-  transform: scale(1.12);
+  background: #fff;
+  font-size: 18px;
 }
 
 .week-day-studied .week-day-dot {
@@ -237,7 +222,8 @@
 }
 
 .week-day-today .week-day-dot {
-  box-shadow: 0 0 0 3px #333;
+  border-color: var(--accent);
+  border-width: 3px;
 }
 
 .week-day-count {
@@ -257,17 +243,10 @@
 
 /* Study session summary */
 .session-summary {
-  border: 2px solid var(--progress-mastered);
-  border-radius: 12px;
-  padding: 8px 24px 20px;
-  max-width: 600px;
+  border: 1px solid var(--progress-mastered);
+  border-radius: 6px;
+  padding: 4px 24px 16px;
   background: #f3faf5;
-  animation: pop-in 0.35s ease-out;
-}
-
-@keyframes pop-in {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
 }
 
 .rating-breakdown {
@@ -278,8 +257,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .streak-active .streak-flame,
-  .session-summary,
   .journey-fill,
   .journey-remaining {
     animation: none;

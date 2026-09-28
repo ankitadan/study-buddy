@@ -1,28 +1,9 @@
+<% content_for :title, "New Deck" %>
+
 <h1>Create a New Deck</h1>
-<% if @deck.errors.any? %>
-  <div class="errors">
-    <ul>
-      <% @deck.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
-<%= form_with model: @deck do |form| %>
-  <div>
-    <%= form.label :name %>
-    <%= form.text_field :name %>
-  </div>
 
-  <div>
-    <%= form.label :description %>
-    <%= form.text_area :description %>
-  </div>
+<div class="box">
+  <%= render "decks/form", deck: @deck, submit_label: "Create Deck" %>
+</div>
 
-  <div>
-    <%= form.submit "Create Deck" %>
-  </div>
-<% end %>
-
-
-<%= link_to "Back to Decks", decks_path %>
+<%= link_to "← Back to Decks", decks_path %>

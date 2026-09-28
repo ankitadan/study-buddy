@@ -1,5 +1,7 @@
 <% content_for :title, "#{@deck.name} Progress" %>
 
+<p><%= link_to "← Back to Deck", deck_path(@deck) %></p>
+
 <h1>Progress: <%= @deck.name %></h1>
 
 <%= render "deck_progress/streak", progress: @progress, deck: @deck %>
@@ -133,6 +135,8 @@
 
 <hr>
 
-<%= link_to "Study Due Cards", deck_study_session_path(@deck) %> |
-<%= link_to "Back to Deck", deck_path(@deck) %> |
-<%= link_to "Back to My Decks", decks_path %>
+<div class="actions">
+  <%= link_to "Study Due Cards", deck_study_session_path(@deck), class: "btn" %>
+  <%= link_to "Back to Deck", deck_path(@deck), class: "btn btn-secondary" %>
+  <%= link_to "Back to My Decks", decks_path, class: "btn btn-secondary" %>
+</div>

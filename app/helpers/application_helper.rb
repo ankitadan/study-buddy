@@ -23,6 +23,6 @@ module ApplicationHelper
     button_to label, path,
               method: :delete,
               class: "btn-danger",
-              form:{ onsubmit: "return confirm(#{confirm.to_json});" }
+              form: { onsubmit: "return confirm(#{confirm.to_json});" }
   end
 end

@@ -1,18 +1,18 @@
 <%= form_with model: [@deck, card] do |form| %>
   <% if card.errors.any? %>
-    <ul>
+    <ul class="form-errors">
       <% card.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
     </ul>
   <% end %>
 
-  <div>
+  <div class="form-field">
     <%= form.label :question %>
     <%= form.text_area :question %>
   </div>
 
-  <div>
+  <div class="form-field">
     <%= form.label :answer %>
     <%= form.text_area :answer %>
   </div>

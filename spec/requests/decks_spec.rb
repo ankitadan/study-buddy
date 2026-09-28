@@ -169,9 +169,11 @@ RSpec.describe "Decks", type: :request do
         name: "Java",
         description: "Programming for Web Dev"
       )
+      deck.cards.create!(question: "What is a class?", answer: "A blueprint")
 
       get deck_path(deck)
 
+      expect(response.body).to include(new_deck_card_path(deck))
       expect(response.body).to include("Add New Card")
       expect(response.body).to include("Delete This Deck")
     end

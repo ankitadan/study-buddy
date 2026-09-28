@@ -1,0 +1,22 @@
+<%# locals: (deck:, submit_label:) %>
+<%= form_with model: deck do |form| %>
+  <% if deck.errors.any? %>
+    <ul class="form-errors">
+      <% deck.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <div class="form-field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="form-field">
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+
+  <%= form.submit submit_label %>
+<% end %>

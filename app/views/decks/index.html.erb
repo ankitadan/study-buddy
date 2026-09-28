@@ -1,17 +1,18 @@
-<p style="color: green"><%= notice %></p>
-<p style="color: red"><%= alert %></p>
+<% content_for :title, "My Decks" %>
 
-<h1>My Decks</h1>
+<div class="page-header">
+  <h1>My Decks</h1>
+</div>
 
 <div id="decks">
   <% if @decks.empty? %>
-    <p>You do not have any decks yet. Create one to start studying.</p>
+    <p class="empty-state">You do not have any decks yet. Create one to start studying.</p>
   <% end %>
 
   <% @decks.each do |deck| %>
     <div class="deck-summary" id="<%= dom_id deck %>">
       <div class="deck-header">
-        <h2><%= deck.name %></h2>
+        <h2><%= link_to deck.name, deck_path(deck) %></h2>
 
         <%= link_to export_deck_cards_path(deck),
             class: "icon-button",
@@ -21,7 +22,9 @@
           <%= icon(:download) %>
         <% end %>
       </div>
-      <p><%= deck.description %></p>
+      <% if deck.description.present? %>
+        <p><%= deck.description %></p>
+      <% end %>
 
       <dl class="deck-progress">
         <div>
@@ -38,12 +41,14 @@
         </div>
       </dl>
 
-      <%= link_to "View Deck", deck_path(deck) %> |
-      <%= link_to "Study Due Cards", deck_study_session_path(deck) %> |
-      <%= link_to "View Progress", deck_progress_path(deck) %>
+      <div class="actions">
+        <%= link_to "Study Due Cards", deck_study_session_path(deck), class: "btn" %>
+        <%= link_to "View Deck", deck_path(deck), class: "btn btn-secondary" %>
+        <%= link_to "View Progress", deck_progress_path(deck), class: "btn btn-secondary" %>
 
-      <%= delete_button "Delete Deck", deck_path(deck),
-          confirm: "Delete the deck \"#{deck.name}\" and all its cards?" %>
+        <%= delete_button "Delete Deck", deck_path(deck),
+            confirm: "Delete the deck \"#{deck.name}\" and all its cards?" %>
+      </div>
     </div>
   <% end %>
 </div>

@@ -8,9 +8,9 @@
       "RSpec"
     ],
     "project_name": "Study-buddy",
-    "timestamp": "2026-09-25T21:48:40.827-05:00",
+    "timestamp": "2026-09-28T01:16:41.053-05:00",
     "root": "/Users/ankitadan/Documents/study-buddy/study-buddy",
-    "commit": "5f71eecc8136f9565ce598e83a7844b2066d4f5a",
+    "commit": "4b2f5b4d526bd413f90af71cbeabfec4a5dd9cea",
     "primary_coverage": "line",
     "line_coverage": true,
     "branch_coverage": true,
@@ -18,19 +18,19 @@
   },
   "total": {
     "lines": {
-      "covered": 301,
-      "missed": 1,
-      "omitted": 339,
-      "total": 302,
-      "percent": 99.66887417218543,
-      "strength": 25.105960264900663
+      "covered": 310,
+      "missed": 2,
+      "omitted": 350,
+      "total": 312,
+      "percent": 99.35897435897436,
+      "strength": 24.615384615384617
     },
     "branches": {
-      "covered": 60,
-      "missed": 1,
-      "total": 61,
-      "percent": 98.36065573770492,
-      "strength": 21.770491803278688
+      "covered": 63,
+      "missed": 2,
+      "total": 65,
+      "percent": 96.92307692307692,
+      "strength": 20.846153846153847
     }
   },
   "coverage": {
@@ -156,25 +156,35 @@
         "    return",
         "  end",
         "",
-        "  cards = []",
+        "  imported_count = 0",
+        "  skipped_count = 0",
         "",
         "  csv.each do |row|",
         "    if row[\"question\"].blank? || row[\"answer\"].blank?",
-        "      redirect_to deck_path(@deck),",
-        "                  alert: \"Question and answer cannot be blank.\"",
-        "      return",
+        "      skipped_count += 1",
+        "      next",
         "    end",
         "",
-        "    cards << @deck.cards.build(",
+        "    card = @deck.cards.build(",
         "      question: row[\"question\"],",
         "      answer: row[\"answer\"]",
         "    )",
+        "",
+        "    if card.save",
+        "      imported_count += 1",
+        "    else",
+        "      skipped_count += 1",
+        "    end",
         "  end",
         "",
-        "  cards.each(&:save!)",
+        "  if skipped_count.zero?",
+        "    notice = \"#{imported_count} cards were successfully imported.\"",
+        "  else",
+        "    notice = \"#{imported_count} cards were imported. #{skipped_count} records were not imported because they contained invalid data.\"",
+        "  end",
         "",
-        "  redirect_to deck_path(@deck),",
-        "              notice: \"Cards were successfully imported.\"",
+        "  redirect_to deck_path(@deck), notice: notice",
+        "",
         "rescue CSV::MalformedCSVError",
         "  redirect_to deck_path(@deck),",
         "              alert: \"Invalid CSV file.\"",
@@ -286,23 +296,33 @@
         null,
         null,
         7,
+        7,
         null,
         7,
-        8,
-        2,
+        14,
+        3,
+        3,
         null,
-        2,
         null,
-        null,
-        6,
-        null,
+        11,
         null,
         null,
         null,
         null,
+        11,
+        11,
+        null,
+        0,
+        null,
+        null,
+        null,
+        7,
         5,
         null,
-        5,
+        2,
+        null,
+        null,
+        7,
         null,
         null,
         0,
@@ -323,11 +343,11 @@
         null,
         null
       ],
-      "lines_covered_percent": 98.24561403508773,
-      "covered_lines": 56,
-      "missed_lines": 1,
-      "omitted_lines": 70,
-      "total_lines": 57,
+      "lines_covered_percent": 96.82539682539682,
+      "covered_lines": 61,
+      "missed_lines": 2,
+      "omitted_lines": 74,
+      "total_lines": 63,
       "branches": [
         {
           "type": "then",
@@ -411,25 +431,57 @@
         },
         {
           "type": "then",
-          "start_line": 95,
+          "start_line": 96,
           "end_line": 97,
-          "coverage": 2,
+          "coverage": 3,
           "inline": false,
-          "report_line": 94
+          "report_line": 95
         },
         {
           "type": "else",
-          "start_line": 94,
+          "start_line": 95,
           "end_line": 98,
-          "coverage": 6,
+          "coverage": 11,
           "inline": true,
-          "report_line": 94
+          "report_line": 95
+        },
+        {
+          "type": "then",
+          "start_line": 106,
+          "end_line": 106,
+          "coverage": 11,
+          "inline": false,
+          "report_line": 105
+        },
+        {
+          "type": "else",
+          "start_line": 108,
+          "end_line": 108,
+          "coverage": 0,
+          "inline": false,
+          "report_line": 107
+        },
+        {
+          "type": "then",
+          "start_line": 113,
+          "end_line": 113,
+          "coverage": 5,
+          "inline": false,
+          "report_line": 112
+        },
+        {
+          "type": "else",
+          "start_line": 115,
+          "end_line": 115,
+          "coverage": 2,
+          "inline": false,
+          "report_line": 114
         }
       ],
-      "branches_covered_percent": 100.0,
-      "covered_branches": 12,
-      "missed_branches": 0,
-      "total_branches": 12
+      "branches_covered_percent": 93.75,
+      "covered_branches": 15,
+      "missed_branches": 1,
+      "total_branches": 16
     },
     "app/controllers/deck_progress_controller.rb": {
       "source": [
@@ -475,7 +527,7 @@
         "  def create",
         "    @deck = Deck.new(deck_params)",
         "",
-        "    if @deck.save",
+        "    if save_deck { @deck.save }",
         "      redirect_to @deck, notice: \"Deck was successfully created.\"",
         "    else",
         "      render :new, status: :unprocessable_entity",
@@ -497,7 +549,7 @@
         "  end",
         "",
         "  def update",
-        "    if @deck.update(deck_params)",
+        "    if save_deck { @deck.update(deck_params) }",
         "      redirect_to @deck, notice: \"Deck was successfully updated.\"",
         "    else",
         "      render :edit, status: :unprocessable_entity",
@@ -513,6 +565,15 @@
         "",
         "",
         "  private",
+        "",
+        "  # The unique index on decks.name catches a duplicate that slips past the",
+        "  # model validation (two saves at once), so show it as a form error too.",
+        "  def save_deck",
+        "    yield",
+        "  rescue ActiveRecord::RecordNotUnique",
+        "    @deck.errors.add(:name, :taken, message: \"is already used by another deck\")",
+        "    false",
+        "  end",
         "",
         "  def set_deck",
         "    @deck = Deck.find(params[:id])",
@@ -536,12 +597,12 @@
         null,
         null,
         1,
-        4,
+        6,
         null,
-        4,
+        12,
         3,
         null,
-        1,
+        3,
         null,
         null,
         null,
@@ -549,21 +610,21 @@
         17,
         null,
         17,
-        9,
+        10,
         null,
-        9,
-        9,
+        10,
+        10,
         null,
-        null,
-        null,
-        1,
         null,
         null,
         1,
-        3,
+        null,
+        null,
+        1,
+        8,
         2,
         null,
-        1,
+        2,
         null,
         null,
         null,
@@ -577,20 +638,29 @@
         null,
         1,
         null,
-        1,
-        25,
         null,
         null,
         1,
-        7,
+        10,
+        null,
+        1,
+        1,
+        null,
+        null,
+        1,
+        26,
+        null,
+        null,
+        1,
+        10,
         null,
         null
       ],
       "lines_covered_percent": 100.0,
-      "covered_lines": 30,
+      "covered_lines": 34,
       "missed_lines": 0,
-      "omitted_lines": 31,
-      "total_lines": 30,
+      "omitted_lines": 36,
+      "total_lines": 34,
       "branches": [
         {
           "type": "then",
@@ -604,7 +674,7 @@
           "type": "else",
           "start_line": 18,
           "end_line": 18,
-          "coverage": 1,
+          "coverage": 3,
           "inline": false,
           "report_line": 17
         },
@@ -612,7 +682,7 @@
           "type": "then",
           "start_line": 26,
           "end_line": 29,
-          "coverage": 9,
+          "coverage": 10,
           "inline": false,
           "report_line": 25
         },
@@ -620,7 +690,7 @@
           "type": "else",
           "start_line": 25,
           "end_line": 30,
-          "coverage": 8,
+          "coverage": 7,
           "inline": true,
           "report_line": 25
         },
@@ -636,7 +706,7 @@
           "type": "else",
           "start_line": 40,
           "end_line": 40,
-          "coverage": 1,
+          "coverage": 2,
           "inline": false,
           "report_line": 39
         }
@@ -919,6 +989,7 @@
         "  def delete_button(label, path, confirm:)",
         "    button_to label, path,",
         "              method: :delete,",
+        "              class: \"btn-danger\",",
         "              form: { onsubmit: \"return confirm(#{confirm.to_json});\" }",
         "  end",
         "end"
@@ -946,7 +1017,8 @@
         null,
         null,
         1,
-        61,
+        62,
+        null,
         null,
         null,
         null,
@@ -955,7 +1027,7 @@
       "lines_covered_percent": 100.0,
       "covered_lines": 6,
       "missed_lines": 0,
-      "omitted_lines": 21,
+      "omitted_lines": 22,
       "total_lines": 6,
       "branches": [],
       "branches_covered_percent": 100.0,
@@ -1158,7 +1230,7 @@
         null,
         null,
         1,
-        174,
+        180,
         null,
         null
       ],
@@ -1220,7 +1292,8 @@
         "  has_many :cards, dependent: :destroy",
         "  has_many :reviews, through: :cards",
         "",
-        "  validates :name, presence: true, uniqueness: true",
+        "  validates :name, presence: true,",
+        "                   uniqueness: { message: \"is already used by another deck\" }",
         "",
         "  def due_cards_count",
         "    cards.due.count",
@@ -1245,6 +1318,7 @@
         null,
         1,
         null,
+        null,
         1,
         30,
         null,
@@ -1264,7 +1338,7 @@
       "lines_covered_percent": 100.0,
       "covered_lines": 10,
       "missed_lines": 0,
-      "omitted_lines": 11,
+      "omitted_lines": 12,
       "total_lines": 10,
       "branches": [],
       "branches_covered_percent": 100.0,
@@ -2038,19 +2112,19 @@
   "groups": {
     "Controllers": {
       "lines": {
-        "covered": 130,
-        "missed": 1,
-        "omitted": 145,
-        "total": 131,
-        "percent": 99.23664122137404,
-        "strength": 6.809160305343512
+        "covered": 139,
+        "missed": 2,
+        "omitted": 154,
+        "total": 141,
+        "percent": 98.58156028368795,
+        "strength": 6.971631205673759
       },
       "branches": {
-        "covered": 28,
-        "missed": 0,
-        "total": 28,
-        "percent": 100.0,
-        "strength": 5.607142857142857
+        "covered": 31,
+        "missed": 1,
+        "total": 32,
+        "percent": 96.875,
+        "strength": 5.75
       },
       "files": [
         "app/controllers/application_controller.rb",
@@ -2064,10 +2138,10 @@
       "lines": {
         "covered": 8,
         "missed": 0,
-        "omitted": 23,
+        "omitted": 24,
         "total": 8,
         "percent": 100.0,
-        "strength": 15.25
+        "strength": 15.375
       },
       "branches": {
         "covered": 0,
@@ -2086,10 +2160,10 @@
       "lines": {
         "covered": 47,
         "missed": 0,
-        "omitted": 49,
+        "omitted": 50,
         "total": 47,
         "percent": 100.0,
-        "strength": 27.574468085106382
+        "strength": 27.70212765957447
       },
       "branches": {
         "covered": 5,
@@ -4675,6 +4749,431 @@
         "app/controllers/cards_controller.rb": {
           "line": 98.24,
           "branch": 100.0
+        },
+        "app/controllers/deck_progress_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/decks_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/study_sessions_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/cards_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/decks_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/card.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/deck.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/review.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/services/deck_progress.rb": {
+          "line": 100.0,
+          "branch": 96.15
+        },
+        "app/services/study_session_summary.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-28T06:03:20Z",
+      "branch": "ankita-dan-changes",
+      "commit": "b99ef73d9d1c33f35e83559b58c21a7e5c92cd3b",
+      "totals": {
+        "line": 99.35,
+        "branch": 96.92
+      },
+      "groups": {
+        "Controllers": {
+          "line": 98.58,
+          "branch": 96.87
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Ungrouped": {
+          "line": 100.0,
+          "branch": 96.42
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/cards_controller.rb": {
+          "line": 96.82,
+          "branch": 93.75
+        },
+        "app/controllers/deck_progress_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/decks_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/study_sessions_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/cards_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/decks_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/card.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/deck.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/review.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/services/deck_progress.rb": {
+          "line": 100.0,
+          "branch": 96.15
+        },
+        "app/services/study_session_summary.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-28T06:13:17Z",
+      "branch": "ankita-dan-changes",
+      "commit": "b99ef73d9d1c33f35e83559b58c21a7e5c92cd3b",
+      "totals": {
+        "line": 31.41,
+        "branch": 23.07
+      },
+      "groups": {
+        "Controllers": {
+          "line": 45.39,
+          "branch": 46.87
+        },
+        "Helpers": {
+          "line": 87.5,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 57.44,
+          "branch": 0.0
+        },
+        "Ungrouped": {
+          "line": 0.0,
+          "branch": 0.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/cards_controller.rb": {
+          "line": 96.82,
+          "branch": 93.75
+        },
+        "app/controllers/deck_progress_controller.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/controllers/decks_controller.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        },
+        "app/controllers/study_sessions_controller.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 83.33,
+          "branch": 100.0
+        },
+        "app/helpers/cards_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/decks_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/card.rb": {
+          "line": 45.16,
+          "branch": 0.0
+        },
+        "app/models/deck.rb": {
+          "line": 70.0,
+          "branch": 100.0
+        },
+        "app/models/review.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/services/deck_progress.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        },
+        "app/services/study_session_summary.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-28T06:14:32Z",
+      "branch": "ankita-dan-changes",
+      "commit": "b99ef73d9d1c33f35e83559b58c21a7e5c92cd3b",
+      "totals": {
+        "line": 31.41,
+        "branch": 23.07
+      },
+      "groups": {
+        "Controllers": {
+          "line": 45.39,
+          "branch": 46.87
+        },
+        "Helpers": {
+          "line": 87.5,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 57.44,
+          "branch": 0.0
+        },
+        "Ungrouped": {
+          "line": 0.0,
+          "branch": 0.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/cards_controller.rb": {
+          "line": 96.82,
+          "branch": 93.75
+        },
+        "app/controllers/deck_progress_controller.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/controllers/decks_controller.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        },
+        "app/controllers/study_sessions_controller.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 83.33,
+          "branch": 100.0
+        },
+        "app/helpers/cards_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/decks_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/card.rb": {
+          "line": 45.16,
+          "branch": 0.0
+        },
+        "app/models/deck.rb": {
+          "line": 70.0,
+          "branch": 100.0
+        },
+        "app/models/review.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/services/deck_progress.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        },
+        "app/services/study_session_summary.rb": {
+          "line": 0.0,
+          "branch": 0.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-28T06:14:49Z",
+      "branch": "ankita-dan-changes",
+      "commit": "b99ef73d9d1c33f35e83559b58c21a7e5c92cd3b",
+      "totals": {
+        "line": 99.35,
+        "branch": 96.92
+      },
+      "groups": {
+        "Controllers": {
+          "line": 98.58,
+          "branch": 96.87
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Ungrouped": {
+          "line": 100.0,
+          "branch": 96.42
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/cards_controller.rb": {
+          "line": 96.82,
+          "branch": 93.75
+        },
+        "app/controllers/deck_progress_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/decks_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/study_sessions_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/cards_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/decks_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/card.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/deck.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/review.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/services/deck_progress.rb": {
+          "line": 100.0,
+          "branch": 96.15
+        },
+        "app/services/study_session_summary.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-28T06:16:41Z",
+      "branch": "ankita-dan-changes",
+      "commit": "4b2f5b4d526bd413f90af71cbeabfec4a5dd9cea",
+      "totals": {
+        "line": 99.35,
+        "branch": 96.92
+      },
+      "groups": {
+        "Controllers": {
+          "line": 98.58,
+          "branch": 96.87
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Ungrouped": {
+          "line": 100.0,
+          "branch": 96.42
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/cards_controller.rb": {
+          "line": 96.82,
+          "branch": 93.75
         },
         "app/controllers/deck_progress_controller.rb": {
           "line": 100.0,

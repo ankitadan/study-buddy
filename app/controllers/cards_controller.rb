@@ -88,25 +88,35 @@ def import
     return
   end
 
-  cards = []
+  imported_count = 0
+  skipped_count = 0
 
   csv.each do |row|
     if row["question"].blank? || row["answer"].blank?
-      redirect_to deck_path(@deck),
-                  alert: "Question and answer cannot be blank."
-      return
+      skipped_count += 1
+      next
     end
 
-    cards << @deck.cards.build(
+    card = @deck.cards.build(
       question: row["question"],
       answer: row["answer"]
     )
+
+    if card.save
+      imported_count += 1
+    else
+      skipped_count += 1
+    end
   end
 
-  cards.each(&:save!)
+  if skipped_count.zero?
+    notice = "#{imported_count} cards were successfully imported."
+  else
+    notice = "#{imported_count} cards were imported. #{skipped_count} records were not imported because they contained invalid data."
+  end
 
-  redirect_to deck_path(@deck),
-              notice: "Cards were successfully imported."
+  redirect_to deck_path(@deck), notice: notice
+
 rescue CSV::MalformedCSVError
   redirect_to deck_path(@deck),
               alert: "Invalid CSV file."

@@ -2598,6 +2598,431 @@
             "branch": 100.0
           }
         }
+      },
+      {
+        "created_at": "2026-09-28T06:03:20Z",
+        "branch": "ankita-dan-changes",
+        "commit": "b99ef73d9d1c33f35e83559b58c21a7e5c92cd3b",
+        "totals": {
+          "line": 99.35,
+          "branch": 96.92
+        },
+        "groups": {
+          "Controllers": {
+            "line": 98.58,
+            "branch": 96.87
+          },
+          "Helpers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Models": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Ungrouped": {
+            "line": 100.0,
+            "branch": 96.42
+          }
+        },
+        "files": {
+          "app/controllers/application_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/cards_controller.rb": {
+            "line": 96.82,
+            "branch": 93.75
+          },
+          "app/controllers/deck_progress_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/decks_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/study_sessions_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/cards_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/decks_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/card.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/deck.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/review.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/services/deck_progress.rb": {
+            "line": 100.0,
+            "branch": 96.15
+          },
+          "app/services/study_session_summary.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        }
+      },
+      {
+        "created_at": "2026-09-28T06:13:17Z",
+        "branch": "ankita-dan-changes",
+        "commit": "b99ef73d9d1c33f35e83559b58c21a7e5c92cd3b",
+        "totals": {
+          "line": 31.41,
+          "branch": 23.07
+        },
+        "groups": {
+          "Controllers": {
+            "line": 45.39,
+            "branch": 46.87
+          },
+          "Helpers": {
+            "line": 87.5,
+            "branch": 100.0
+          },
+          "Models": {
+            "line": 57.44,
+            "branch": 0.0
+          },
+          "Ungrouped": {
+            "line": 0.0,
+            "branch": 0.0
+          }
+        },
+        "files": {
+          "app/controllers/application_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/cards_controller.rb": {
+            "line": 96.82,
+            "branch": 93.75
+          },
+          "app/controllers/deck_progress_controller.rb": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "app/controllers/decks_controller.rb": {
+            "line": 0.0,
+            "branch": 0.0
+          },
+          "app/controllers/study_sessions_controller.rb": {
+            "line": 0.0,
+            "branch": 0.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 83.33,
+            "branch": 100.0
+          },
+          "app/helpers/cards_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/decks_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/card.rb": {
+            "line": 45.16,
+            "branch": 0.0
+          },
+          "app/models/deck.rb": {
+            "line": 70.0,
+            "branch": 100.0
+          },
+          "app/models/review.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/services/deck_progress.rb": {
+            "line": 0.0,
+            "branch": 0.0
+          },
+          "app/services/study_session_summary.rb": {
+            "line": 0.0,
+            "branch": 0.0
+          }
+        }
+      },
+      {
+        "created_at": "2026-09-28T06:14:32Z",
+        "branch": "ankita-dan-changes",
+        "commit": "b99ef73d9d1c33f35e83559b58c21a7e5c92cd3b",
+        "totals": {
+          "line": 31.41,
+          "branch": 23.07
+        },
+        "groups": {
+          "Controllers": {
+            "line": 45.39,
+            "branch": 46.87
+          },
+          "Helpers": {
+            "line": 87.5,
+            "branch": 100.0
+          },
+          "Models": {
+            "line": 57.44,
+            "branch": 0.0
+          },
+          "Ungrouped": {
+            "line": 0.0,
+            "branch": 0.0
+          }
+        },
+        "files": {
+          "app/controllers/application_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/cards_controller.rb": {
+            "line": 96.82,
+            "branch": 93.75
+          },
+          "app/controllers/deck_progress_controller.rb": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "app/controllers/decks_controller.rb": {
+            "line": 0.0,
+            "branch": 0.0
+          },
+          "app/controllers/study_sessions_controller.rb": {
+            "line": 0.0,
+            "branch": 0.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 83.33,
+            "branch": 100.0
+          },
+          "app/helpers/cards_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/decks_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/card.rb": {
+            "line": 45.16,
+            "branch": 0.0
+          },
+          "app/models/deck.rb": {
+            "line": 70.0,
+            "branch": 100.0
+          },
+          "app/models/review.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/services/deck_progress.rb": {
+            "line": 0.0,
+            "branch": 0.0
+          },
+          "app/services/study_session_summary.rb": {
+            "line": 0.0,
+            "branch": 0.0
+          }
+        }
+      },
+      {
+        "created_at": "2026-09-28T06:14:49Z",
+        "branch": "ankita-dan-changes",
+        "commit": "b99ef73d9d1c33f35e83559b58c21a7e5c92cd3b",
+        "totals": {
+          "line": 99.35,
+          "branch": 96.92
+        },
+        "groups": {
+          "Controllers": {
+            "line": 98.58,
+            "branch": 96.87
+          },
+          "Helpers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Models": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Ungrouped": {
+            "line": 100.0,
+            "branch": 96.42
+          }
+        },
+        "files": {
+          "app/controllers/application_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/cards_controller.rb": {
+            "line": 96.82,
+            "branch": 93.75
+          },
+          "app/controllers/deck_progress_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/decks_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/study_sessions_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/cards_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/decks_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/card.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/deck.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/review.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/services/deck_progress.rb": {
+            "line": 100.0,
+            "branch": 96.15
+          },
+          "app/services/study_session_summary.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        }
+      },
+      {
+        "created_at": "2026-09-28T06:16:41Z",
+        "branch": "ankita-dan-changes",
+        "commit": "4b2f5b4d526bd413f90af71cbeabfec4a5dd9cea",
+        "totals": {
+          "line": 99.35,
+          "branch": 96.92
+        },
+        "groups": {
+          "Controllers": {
+            "line": 98.58,
+            "branch": 96.87
+          },
+          "Helpers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Models": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Ungrouped": {
+            "line": 100.0,
+            "branch": 96.42
+          }
+        },
+        "files": {
+          "app/controllers/application_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/cards_controller.rb": {
+            "line": 96.82,
+            "branch": 93.75
+          },
+          "app/controllers/deck_progress_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/decks_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/study_sessions_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/cards_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/decks_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/card.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/deck.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/review.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/services/deck_progress.rb": {
+            "line": 100.0,
+            "branch": 96.15
+          },
+          "app/services/study_session_summary.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        }
       }
     ]
   }

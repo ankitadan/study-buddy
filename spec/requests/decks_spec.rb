@@ -128,6 +128,34 @@ RSpec.describe "Decks", type: :request do
 
       expect(response).to redirect_to(deck_path(Deck.last))
     end
+
+    context "when a deck with the same name already exists" do
+      let!(:existing) { Deck.create!(name: "Java") }
+
+      it "does not create the deck and explains why" do
+        expect do
+          post decks_path, params: { deck: { name: "Java", description: "Again" } }
+        end.not_to change(Deck, :count)
+
+        expect(response).to have_http_status(:unprocessable_entity)
+
+        page = Nokogiri::HTML(response.body)
+        expect(page.at_css(".field_with_errors input[name='deck[name]']")["value"]).to eq("Java")
+        expect(page.at_css(".field-error").text.squish)
+          .to eq('A deck named "Java" already exists. Pick a different name or open the existing deck.')
+        expect(page.at_css(".field-error a")["href"]).to eq(deck_path(existing))
+        expect(page.at_css(".form-errors")).to be_nil
+      end
+
+      it "shows the same error when the database rejects the duplicate" do
+        allow_any_instance_of(Deck).to receive(:save).and_raise(ActiveRecord::RecordNotUnique)
+
+        post decks_path, params: { deck: { name: "Java" } }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(Nokogiri::HTML(response.body).at_css(".field-error").text).to include('A deck named "Java" already exists.')
+      end
+    end
   end
 
   describe "GET /decks/:id" do
@@ -258,6 +286,17 @@ describe "PATCH /decks/:id" do
     expect(deck.name).to eq("Java")
     expect(deck.description).to eq("Programming for Web Dev")
     expect(response).to have_http_status(:unprocessable_entity)
+  end
+
+  it "does not rename the deck to a name another deck uses" do
+    deck = Deck.create!(name: "Java")
+    other = Deck.create!(name: "Ruby")
+
+    patch deck_path(deck), params: { deck: { name: "Ruby" } }
+
+    expect(deck.reload.name).to eq("Java")
+    expect(response).to have_http_status(:unprocessable_entity)
+    expect(Nokogiri::HTML(response.body).at_css(".field-error a")["href"]).to eq(deck_path(other))
   end
 end
 

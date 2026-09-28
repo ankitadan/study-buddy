@@ -1,13 +1,16 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Card" %>
 
-<%= render @card %>
+<p><%= link_to "← Back to cards", deck_cards_path(@deck) %></p>
 
-<div>
+<h1>Card</h1>
+
+<div class="box">
+  <%= render @card %>
+</div>
+
+<div class="actions">
   <%= link_to "Edit this card",
-      edit_deck_card_path(@deck, @card) %>
-
-  <%= link_to "Back to cards",
-      deck_cards_path(@deck) %>
+      edit_deck_card_path(@deck, @card), class: "btn btn-secondary" %>
 
   <%= delete_button "Destroy this card", deck_card_path(@deck, @card),
       confirm: "Delete this card?" %>

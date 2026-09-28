@@ -12,7 +12,7 @@ class DecksController < ApplicationController
   def create
     @deck = Deck.new(deck_params)
 
-    if @deck.save
+    if save_deck { @deck.save }
       redirect_to @deck, notice: "Deck was successfully created."
     else
       render :new, status: :unprocessable_entity
@@ -34,7 +34,7 @@ class DecksController < ApplicationController
   end
 
   def update
-    if @deck.update(deck_params)
+    if save_deck { @deck.update(deck_params) }
       redirect_to @deck, notice: "Deck was successfully updated."
     else
       render :edit, status: :unprocessable_entity
@@ -50,6 +50,15 @@ class DecksController < ApplicationController
 
 
   private
+
+  # The unique index on decks.name catches a duplicate that slips past the
+  # model validation (two saves at once), so show it as a form error too.
+  def save_deck
+    yield
+  rescue ActiveRecord::RecordNotUnique
+    @deck.errors.add(:name, :taken, message: "is already used by another deck")
+    false
+  end
 
   def set_deck
     @deck = Deck.find(params[:id])

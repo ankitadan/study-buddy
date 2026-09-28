@@ -2,7 +2,8 @@ class Deck < ApplicationRecord
   has_many :cards, dependent: :destroy
   has_many :reviews, through: :cards
 
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true,
+                   uniqueness: { message: "is already used by another deck" }
 
   def due_cards_count
     cards.due.count

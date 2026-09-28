@@ -1,9 +1,12 @@
 <%# locals: (deck:, submit_label:) %>
+<% name_taken = deck.errors.of_kind?(:name, :taken) %>
+<% other_errors = deck.errors.reject { |error| error.attribute == :name && error.type == :taken } %>
+
 <%= form_with model: deck do |form| %>
-  <% if deck.errors.any? %>
+  <% if other_errors.any? %>
     <ul class="form-errors">
-      <% deck.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+      <% other_errors.each do |error| %>
+        <li><%= error.full_message %></li>
       <% end %>
     </ul>
   <% end %>
@@ -11,6 +14,14 @@
   <div class="form-field">
     <%= form.label :name %>
     <%= form.text_field :name %>
+
+    <% if name_taken %>
+      <% existing = Deck.where.not(id: deck.id).find_by(name: deck.name) %>
+      <p class="field-error">
+        A deck named "<%= deck.name %>" already exists.
+        Pick a different name<% if existing %> or <%= link_to "open the existing deck", deck_path(existing) %><% end %>.
+      </p>
+    <% end %>
   </div>
 
   <div class="form-field">

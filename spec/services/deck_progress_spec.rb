@@ -1,10 +1,16 @@
 require "rails_helper"
 
 RSpec.describe DeckProgress do
+  include ActiveSupport::Testing::TimeHelpers
+
   let(:deck) { Deck.create!(name: "Spanish") }
   let(:card) { deck.cards.create!(question: "Hello", answer: "Hola") }
   let(:today) { Date.new(2026, 9, 25) } # a Friday
   let(:progress) { described_class.new(deck, today: today) }
+
+  # Cards get next_review_date = Date.current, so keep the clock on `today`
+  # or forecasts drift as the real date moves past it.
+  around { |example| travel_to(today) { example.run } }
 
   def review_on(date, count: 1, reviewed_card: card)
     count.times { reviewed_card.reviews.create!(quality: 4, reviewed_on: date) }

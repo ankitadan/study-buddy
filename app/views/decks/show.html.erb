@@ -1,70 +1,77 @@
+<% content_for :title, @deck.name %>
+
+<p><%= link_to "← Back to My Decks", decks_path %></p>
+
 <h1><%= @deck.name %></h1>
 
-<p><%= @deck.description %></p>
+<% if @deck.description.present? %>
+  <p class="muted"><%= @deck.description %></p>
+<% end %>
 
-<div>
-  <%= link_to "Add New Card", new_deck_card_path(@deck) %> |
+<div class="actions">
   <%= link_to "Study Due Cards (#{@deck.cards.due.count})",
-      deck_study_session_path(@deck) %> |
-  <%= link_to "View Progress", deck_progress_path(@deck) %>
+      deck_study_session_path(@deck), class: "btn" %>
+  <%= link_to "View Progress", deck_progress_path(@deck), class: "btn btn-secondary" %>
+  <%= link_to "All Cards", deck_cards_path(@deck), class: "btn btn-secondary" %>
+  <%= render "import_form" %>
 </div>
-<%= render "import_form" %>
-<hr>
 
 <% if @card %>
   <div class="flashcard">
+    <div class="card-tools">
+      <%= link_to "Edit Card",
+          edit_deck_card_path(@deck, @card), class: "btn btn-secondary" %>
+
+      <%= delete_button "Delete Card", deck_card_path(@deck, @card),
+          confirm: "Delete this card?" %>
+    </div>
+
     <h2>Question</h2>
 
-    <p>
-      <%= @card.question %>
-    </p>
+    <p><%= @card.question %></p>
 
     <hr>
 
     <h2>Answer</h2>
 
-    <p>
-      <%= @card.answer %>
-    </p>
-
-    <div>
-      <%= link_to "Edit Card",
-          edit_deck_card_path(@deck, @card) %>
-
-      <%= delete_button "Delete Card", deck_card_path(@deck, @card),
-          confirm: "Delete this card?" %>
-    </div>
+    <p><%= @card.answer %></p>
   </div>
 
   <div class="card-navigation">
-    <% if @previous_card %>
-      <%= link_to "Previous Card",
-          deck_path(@deck, card_id: @previous_card.id) %>
-    <% end %>
+    <span>
+      <% if @previous_card %>
+        <%= link_to "← Previous Card",
+            deck_path(@deck, card_id: @previous_card.id) %>
+      <% end %>
+    </span>
 
-    <% if @next_card %>
-      <%= link_to "Next Card",
-          deck_path(@deck, card_id: @next_card.id) %>
-    <% end %>
+    <span>
+      <% if @next_card %>
+        <%= link_to "Next Card →",
+            deck_path(@deck, card_id: @next_card.id) %>
+      <% end %>
+    </span>
   </div>
 
   <% unless @previous_card || @next_card %>
-    <p>This deck has only one card.</p>
+    <p class="muted">This deck has only one card.</p>
   <% end %>
 
-<% else %>
-  <p>This deck does not have any cards yet.</p>
+  <%= link_to "+ Add New Card", new_deck_card_path(@deck), class: "add-card-tile" %>
 
-  <%= link_to "Add Your First Card",
-      new_deck_card_path(@deck) %>
+<% else %>
+  <div class="empty-state">
+    <p>This deck does not have any cards yet.</p>
+
+    <%= link_to "Add Your First Card",
+        new_deck_card_path(@deck), class: "btn" %>
+  </div>
 <% end %>
 
 <hr>
 
-<%= link_to "Back to My Decks", decks_path %> |
-<%= link_to "Create New Deck", new_deck_path %>
-
-<br><br>
-
-<%= delete_button "Delete This Deck", deck_path(@deck),
-    confirm: "Delete this deck and all its cards?" %>
+<div class="actions">
+  <%= link_to "Edit Deck", edit_deck_path(@deck), class: "btn btn-secondary" %>
+  <%= delete_button "Delete This Deck", deck_path(@deck),
+      confirm: "Delete this deck and all its cards?" %>
+</div>

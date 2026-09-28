@@ -1,26 +1,25 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Cards" %>
 
-<h1><%= @deck.name %> Cards</h1>
+<p><%= link_to "← Back to deck", deck_path(@deck) %></p>
 
-<div id="cards">
-  <% @cards.each do |card| %>
-    <%= render card %>
-
-    <p>
-      <%= link_to "Show this card",
-          deck_card_path(@deck, card) %>
-
-      <%= link_to "Edit",
-          edit_deck_card_path(@deck, card) %>
-    </p>
-  <% end %>
+<div class="page-header">
+  <h1><%= @deck.name %> Cards</h1>
+  <%= link_to "New card", new_deck_card_path(@deck), class: "btn" %>
 </div>
 
-<%= link_to "New card",
-    new_deck_card_path(@deck) %>
+<div id="cards">
+  <% if @cards.empty? %>
+    <p class="empty-state">No cards in this deck yet.</p>
+  <% end %>
 
-<br>
-<%= link_to "Create New Deck", new_deck_path %>
-<%= link_to "Back to deck", deck_path(@deck) %>
+  <% @cards.each do |card| %>
+    <div class="box">
+      <%= render card %>
+
+      <div class="actions">
+        <%= link_to "Show this card", deck_card_path(@deck, card) %>
+        <%= link_to "Edit", edit_deck_card_path(@deck, card) %>
+      </div>
+    </div>
+  <% end %>
+</div>

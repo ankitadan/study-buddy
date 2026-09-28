@@ -22,13 +22,27 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   </head>
 
-<body>
-  <% flash.each do |type, message| %>
-    <div class="flash <%= type %>">
-      <%= message %>
-    </div>
-  <% end %>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <%= link_to "📚 Study Buddy", decks_path, class: "brand" %>
+        <nav>
+          <%= link_to "My Decks", decks_path %>
+          <%= link_to "New Deck", new_deck_path %>
+        </nav>
+      </div>
+    </header>
 
-  <%= yield %>
-</body>
+    <main class="container">
+      <% flash.each do |type, message| %>
+        <p class="flash flash-<%= type %>"><%= message %></p>
+      <% end %>
+
+      <%= yield %>
+    </main>
+
+    <footer class="site-footer container">
+      made for studying · Study Buddy
+    </footer>
+  </body>
 </html>

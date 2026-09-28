@@ -1,25 +1,19 @@
-<div id="<%= dom_id card %>">
-  <div>
+<div id="<%= dom_id card %>" class="card-item">
+  <p>
     <strong>Question:</strong>
     <%= card.question %>
-  </div>
+  </p>
 
-  <div>
+  <p>
     <strong>Answer:</strong>
     <%= card.answer %>
-  </div>
-
-  <div>
-    <strong>Deck:</strong>
-    <%= card.deck_id %>
-  </div>
+  </p>
 
   <div class="sm2-details">
-    <strong>Next review:</strong>
+    Next review:
     <%= card.next_review_date&.to_fs(:review) || "Today" %>
     (interval <%= pluralize(card.interval, "day") %>,
     <%= pluralize(card.repetition, "successful review") %>,
     ease factor <%= card.ease_factor.round(2) %>)
   </div>
-
 </div>

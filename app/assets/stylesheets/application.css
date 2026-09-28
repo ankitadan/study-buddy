@@ -212,6 +212,23 @@ textarea:focus {
   border-color: var(--accent);
 }
 
+/* Rails wraps invalid fields in .field_with_errors */
+.field_with_errors label {
+  color: var(--danger);
+}
+
+.field_with_errors input[type="text"],
+.field_with_errors textarea {
+  border-color: var(--danger);
+  background: #fffafa;
+}
+
+.field-error {
+  color: var(--danger);
+  font-size: 14px;
+  margin: 6px 0 0;
+}
+
 .form-errors {
   color: var(--danger);
   background: #fdeeed;

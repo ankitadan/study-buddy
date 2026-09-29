@@ -14,12 +14,12 @@ During the planning discussion, we separated the features into essential and opt
 - Study session for due cards
 - Again, Hard, Good, and Easy self-grading
 - SM-2 scheduling with ease factor, interval, repetition count, and due date
+- CSV import/export
 - Basic progress statistics
 - Automated unit and acceptance tests
 
 ### Stretch Features
 
-- CSV import/export
 - Quiz mode and combo scoring
 - Expanded analytics
 
@@ -61,5 +61,6 @@ The planned development order is:
 5. Study sessions
 6. SM-2 scheduling
 7. Basic progress statistics
-8. Optional features, if time permits
+8. CSV import/export
+9. Optional features, if time permits
 

@@ -1,83 +1,97 @@
 # Testing
 
-StudyBuddy currently uses RSpec for its executable automated test suite. The tests are isolated with transactional fixtures and use the test database.
+StudyBuddy currently uses **RSpec** for its executable automated test suite. The tests cover models, request behavior, services, routing, and views. The test suite uses the test database and isolated test examples.
 
-## Running tests
+## Running Tests
 
 ```bash
 bundle exec rspec
 ```
 
-RSpec starts SimpleCov through `spec/rails_helper.rb`. To run the suite and refresh the coverage report explicitly:
+RSpec starts SimpleCov through `spec/rails_helper.rb`. To explicitly refresh the coverage report:
 
 ```bash
 COVERAGE=true bundle exec rspec
 ```
 
-The HTML report is generated at `coverage/index.html`. Running `bin/rails test` currently reports zero tests because the legacy Minitest controller and model files contain only commented examples; the two system-test examples are not part of that command's executable suite.
+The HTML coverage report is generated at:
 
+```text
+coverage/index.html
+```
 ## Executed test cases with coverage
+
 ![alt text](image.png)
-### Models: 42 examples
 
-- `Card` accepts valid question, answer, and deck attributes.
-- `Card` validates the presence of its question, answer, and deck.
-- `Card` belongs to a deck.
-- Cards can be edited and deleted.
-- Deleting a card's deck removes the card.
-- `Deck` accepts and persists a name and description.
-- `Deck` has many cards and destroys associated cards when deleted.
-- `Card#review` applies SM-2 for Again, Hard, Good, and Easy, and the ease factor never falls below 1.3.
-- `Card#schedule` applies the same SM-2 update as `Card#review` without saving.
-- `Card.due` returns cards due today or earlier, most overdue first, and excludes reviewed and future cards.
-- `Review` requires a valid rating quality and review date, and is deleted with its card.
-- Deck progress returns zeros for empty decks, counts due cards and reviews per deck, and calculates the study streak (consecutive days, same-day reviews counted once, yesterday keeps the streak, a missed day ends it).
+The legacy Minitest files are not part of the current executable RSpec suite.
 
-### Requests: 102 examples
+### Models
 
-- Deck index, new, show, edit, update, create, and delete actions return the expected responses, render the expected content, and redirect correctly.
-- Deck creation and update reject invalid names without changing persisted data.
-- Deck deletion removes associated cards.
-- Card index, new, show, edit, create, update, and delete actions work through nested deck routes.
-- Cards are scoped to their selected deck, including empty-deck and cross-deck cases.
-- Blank card questions and answers are rejected without creating or updating a card.
-- Deck study navigation selects the first card by default, honors a selected card, and shows the correct previous/next controls.
-- Invalid card IDs fall back to the first card, and empty decks show an empty-state message.
-- Study sessions show only the selected deck's due cards (today or earlier), hide the answer until it is revealed, and show the number of cards due.
-- Again, Hard, Good, and Easy ratings update the card through SM-2, remove it from the queue, and show the next due card or a "no cards due" message.
-- Study sessions reject invalid ratings, cards that are not due, and cards from another deck without changing them.
-- Grading a card records a review; rejected grades do not.
-- The decks page shows due cards, total reviews, and study streak for each deck, zeros for new decks, and an empty-state message when there are no decks.
-- The deck progress page shows stat tiles, active and at-risk streak messages, the streak goal bar with only earned badges, the New → Learning → Mastered bar with pending cards, reviews, and days, and the Monday-to-Sunday week strip, with empty states for new decks.
-- Finishing a study session shows a one-time summary of only that session's reviews (count, remembered percentage, streak, rating breakdown, next due date); unfinished sessions from earlier days are discarded.
+* `Card` validates question, answer, and deck presence.
+* Cards belong to decks and can be edited or deleted.
+* Deleting a deck removes its associated cards.
+* Cards initialize with the expected SM-2 values and review date.
+* `Card#review` applies SM-2 scheduling for Again, Hard, Good, and Easy ratings.
+* The ease factor never falls below 1.3.
+* `Card#schedule` calculates the same SM-2 update as `review` without saving it.
+* `Card.due` identifies cards due today or earlier, orders overdue cards first, and excludes future/reviewed cards.
+* `Review` validates rating quality and review date and is removed when its card is deleted.
+* Deck progress correctly handles due cards, review counts, and study streaks.
 
-### Services: 26 examples
+### Requests
 
-- `DeckProgress` returns zeros for an empty deck, groups cards into new, learning, and mastered by SM-2 interval, and reports active, at-risk, and no streak.
-- `DeckProgress` finds the longest streak, earns badges from it (kept after a streak ends), and reports the next milestone and how full the streak goal bar is.
-- `DeckProgress` mastery progress puts new cards at 0%, cards rated Again at 25%, and mastered cards at 100%, moves cards forward with each Good review, estimates reviews and days left to mastery, and does not save the simulated reviews.
-- `DeckProgress#this_week` returns Monday to Sunday with today, future days, and per-day review counts for the deck only.
-- `StudySessionSummary` counts only the session's reviews, splits them by rating, calculates the remembered percentage, and reports the next review date.
+* Deck CRUD actions return the expected responses, render the correct content, and redirect appropriately.
+* Invalid and duplicate deck names are rejected without changing persisted data.
+* Deck deletion removes associated cards.
+* Nested card CRUD actions work correctly.
+* Cards are scoped to their selected deck, including empty-deck and cross-deck cases.
+* Blank card questions and answers are rejected.
+* Card navigation handles first, selected, previous, next, invalid, and empty-deck cases.
+* Study sessions display only due cards for the selected deck.
+* Answers remain hidden until revealed.
+* Again, Hard, Good, and Easy ratings update SM-2 scheduling and remove reviewed cards from the study queue.
+* Invalid ratings, future cards, and cross-deck cards are rejected without modifying the card.
+* Valid reviews are recorded, while rejected reviews are not.
+* CSV export includes deck/card information and correctly handles commas, quotes, and newlines.
+* CSV import accepts valid records, skips invalid records, preserves valid records during partial imports, and reports the number of skipped records.
+* Deck pages display due cards, review counts, and study streaks.
+* Progress pages display mastery, streaks, milestones, weekly activity, and appropriate empty states.
+* Study session summaries report only reviews from the completed session.
 
-### Routing: 7 examples
+### Services
 
-- Deck routes map GET index/new/show/edit, POST create, PATCH update, and DELETE destroy to the expected controller actions.
+* `DeckProgress` calculates due cards, reviews, streaks, mastery levels, and progress.
+* `DeckProgress` handles active, at-risk, and inactive streaks.
+* Streak milestones and earned badges are calculated correctly.
+* Mastery progress handles New, Learning, and Mastered cards.
+* Simulated mastery reviews do not persist changes.
+* Weekly progress returns Monday-to-Sunday activity for the selected deck.
+* `StudySessionSummary` counts session reviews, rating breakdowns, remembered percentage, and next review date.
 
-### Views: 12 examples
+### Routing
 
-- Card index displays question and answer and links to the card show and new-card form.
-- Card new and edit views render the form with the correct nested action and navigation link.
-- Card show displays question and answer, edit and delete actions, and a link back to the card list.
+* Deck routes correctly map index, new, show, edit, create, update, and delete actions to the expected controller actions.
 
-## Latest test run
+### Views
 
-Command: `bundle exec rspec`
+* Card index displays card questions and answers and provides navigation links.
+* Card new and edit views render the correct nested forms.
+* Card show displays question, answer, edit/delete actions, and navigation back to the card list.
 
-- 189 examples, 0 failures
-- Line coverage: 298/300 (99.33%)
-- Branch coverage: 61/63 (96.82%)
-- Coverage report: `coverage/index.html`
+## Latest Test Run
 
-The 80% coverage target is met. The run emits deprecation warnings for `SimpleCov.add_filter` and Rack's `:unprocessable_entity` status alias; these warnings do not affect the passing result.
+Command:
 
+```bash
+bundle exec rspec
+```
 
+**198 examples, 0 failures**
+
+* **Line coverage:** 310 / 312 (**99.35%**)
+* **Branch coverage:** 63 / 65 (**96.92%**)
+* **Coverage report:** `coverage/index.html`
+
+The project exceeds the **80% coverage target**.
+
+The test run currently produces deprecation warnings for `SimpleCov.add_filter` and Rack's `:unprocessable_entity` status alias. These warnings do **not** affect the passing test result.

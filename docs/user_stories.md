@@ -1,357 +1,274 @@
 # StudyBuddy User Stories
 
-StudyBuddy is a Ruby on Rails flashcard application that helps students organize study material, review flashcards, and track spaced-repetition information.
+StudyBuddy is a Rails flashcard app that uses the SM-2 spaced-repetition algorithm to schedule reviews.
 
-## Essential Stories
+Each story's acceptance criteria include the happy path and the sad paths (invalid input, empty states, and missing records). Every criterion is covered by the RSpec suite; the [Testing](#testing) section maps stories to spec files.
 
-## Deck Management
+## Essential stories
 
-### User Story 1: Create a Deck
+## Deck and Card Management
+
+### US-1: Create a Deck
 
 **As a student, I want to create a study deck with a name and description so that I can organize my study material by topic.**
 
 **Acceptance Criteria:**
 
-* The user can open the "Create a New Deck" page.
+* The user can open the "Create a New Deck" page from the navigation.
 * The user can enter a deck name and description.
-* Submitting valid information creates and saves a new deck.
-* The user is redirected to the newly created deck.
+* Submitting the form creates and saves the deck, and the user is redirected to it.
+* A deck must have a name. A blank name is rejected and no deck is saved.
+* Deck names must be unique. A name another deck already uses is rejected with the message "is already used by another deck", and no deck is saved.
+* The same message is shown if the database rejects a duplicate name that slipped past the form check.
 
 ---
 
-### User Story 2: View My Decks
+### US-2: View and Edit My Decks
 
-**As a student, I want to view my study decks so that I can choose which deck I want to study.**
+**As a student, I want to see all of my decks with their progress and keep their details up to date so that I can choose which deck to study and keep my material organized.**
 
 **Acceptance Criteria:**
 
-* The user can access the Decks page.
-* The page loads successfully.
-* Existing decks are displayed.
-* Each deck displays its name and description.
+* The My Decks page loads successfully and lists every deck.
+* Each deck shows its cards due today, total reviews, and current study streak. A new deck shows zeros.
+* Each deck links to its study session, its detail page, its progress page, and its CSV export.
+* If there are no decks, an informative message asks the user to create one.
+* The edit page shows the deck's current name and description.
+* Saving valid changes updates the deck, and the user is redirected to it.
+* A blank name is rejected, and the deck keeps its existing information.
+* Renaming a deck to a name another deck already uses is rejected, and the deck keeps its existing name.
 
 ---
 
-### User Story 3: View a Deck
+### US-3: View a Deck and Browse Its Cards
 
-**As a student, I want to view an individual deck so that I can see its details and manage its study cards.**
+**As a student, I want to open a deck and move forward and backward through its cards so that I can read every card in the deck.**
 
 **Acceptance Criteria:**
 
-* The user can open an existing deck.
-* The deck name and description are displayed.
-* The user can access the option to add a new card.
-* The user can access the option to delete the deck.
-* The cards belonging to the selected deck are displayed.
+* The deck page shows the deck's name, description, and card management options.
+* The first card is displayed by default, and only one card is displayed at a time.
+* The displayed card shows its question and answer.
+* Next Card and Previous Card move through the cards in a consistent order.
+* The first card does not show Previous Card, and the last card does not show Next Card.
+* An invalid card in the link falls back to the first card.
+* Only cards from the selected deck are shown, and navigation stays within that deck.
+* If the deck has no cards, an informative message and an "Add Your First Card" option are shown.
 
 ---
 
-### User Story 4: Edit a Deck
+### US-4: Delete a Deck and Its Cards
 
-**As a student, I want to edit my deck's name and description so that I can keep my study materials up to date.**
+**As a student, I want to delete a deck I no longer need, along with its cards, so that my study material stays organized and no orphaned cards remain.**
 
 **Acceptance Criteria:**
 
-* The user can access the edit page for an existing deck.
-* The current deck information is displayed.
-* The user can change the deck name and description.
-* The updated information is saved.
-* The user is redirected to the updated deck.
+* The user can delete a deck from the My Decks page or the deck page.
+* The user is asked to confirm before the deck is deleted. The deck name is shown safely in the confirmation, even if it contains special characters.
+* Deleting the deck also deletes all of its cards and their review history.
+* Cards in other decks are not affected.
+* The user is redirected to My Decks after deletion.
 
 ---
 
-### User Story 5: Delete a Deck
+### US-5: Add a Card to a Deck
 
-**As a student, I want to delete a deck that I no longer need so that I can keep my study materials organized.**
-
-**Acceptance Criteria:**
-
-* The user can delete an existing deck.
-* The deck is removed from the application.
-* Cards associated with the deck are also deleted.
-* Cards belonging to other decks are not affected.
-* The user is redirected to the Decks page after deletion.
-
----
-
-### User Story 6: Prevent Invalid Deck Information
-
-**As a student, I want the application to prevent me from saving a deck without a name so that all of my study decks can be clearly identified.**
+**As a student, I want to add cards with a question and answer to a deck, including while I am viewing it, so that I can build my study material whenever I need to.**
 
 **Acceptance Criteria:**
 
-* A deck must have a name.
-* The user cannot create a deck with an empty name.
-* The user cannot update a deck with an empty name.
-* Invalid information is not saved.
-* Existing deck information remains unchanged when an invalid update is submitted.
-* The user receives an appropriate error message when invalid information is submitted.
-
-### Deck Story Classification
-
-| Story | Feature                          | Classification            |
-| ----- | -------------------------------- | ------------------------- |
-| 1     | Create a Deck                    | Essential                 |
-| 2     | View My Decks                    | Essential                 |
-| 3     | View a Deck                      | Essential                 |
-| 4     | Edit a Deck                      | Essential                 |
-| 5     | Delete a Deck                    | Essential                 |
-| 6     | Prevent Invalid Deck Information | Sad Path / Error Handling |
-
----
-
-# Card Management
-
-### User Story 1: Create a Card
-
-**As a student, I want to add cards to my study deck with a question and answer so that I can create study material for the selected topic.**
-
-**Acceptance Criteria:**
-
-* The user can open the Create a New Card page from a deck.
+* The user can open the new card form from the deck page ("+ Add New Card" or "Add Your First Card") and from the deck's card list.
 * The user can enter a question and answer.
-* The question cannot be blank.
-* The answer cannot be blank.
-* Submitting valid information creates and saves a card.
-* The card is associated with the selected deck.
-* The user is redirected back to the deck after creation.
-* The card appears under the correct deck.
+* Submitting valid information creates the card in the selected deck.
+* The question cannot be blank, and the answer cannot be blank. Invalid input does not create a card.
+* A new card is due for study right away.
+* The new card is available when browsing the deck.
 
 ---
 
-### User Story 2: View and Navigate Through Cards
+### US-6: View All Cards in a Deck
 
-**As a student, I want to navigate forward and backward through the cards so that I can study every card in the deck.**
+**As a student, I want to see all of a deck's cards on one page so that I can review and manage the whole deck at a glance.**
 
 **Acceptance Criteria:**
 
-* The user can open a deck's detail page.
-* The first card is displayed by default.
-* Only one card is displayed at a time.
-* The displayed card includes its question and answer.
-* Cards from other decks are not displayed.
-* The user can click Next Card to view the next card.
-* The user can click Previous Card to view the previous card.
-* Cards are displayed in a consistent order.
-* Navigation remains within the selected deck.
-* The first card does not display a previous-card option.
-* The last card does not display a next-card option.
-* If the deck has no cards, an informative empty-state message is shown.
-* The user can access the option to add a new card.
+* The user can open the card list from the deck page with "All Cards".
+* The page lists every card in the deck with its question and answer.
+* Each card links to its own page and to its edit form.
+* The page links to the new card form and back to the deck.
+* Only cards from the selected deck are listed.
+* If the deck has no cards, the page loads successfully and shows an informative message.
 
 ---
 
-### User Story 3: Add a Card While Viewing Cards
+### US-7: View, Edit, and Delete a Card
 
-**As a student, I want to add a new card while viewing a deck so that I can expand my study material whenever needed.**
+**As a student, I want to view, edit, and delete a card so that I can correct my study material or remove cards I no longer need.**
 
 **Acceptance Criteria:**
 
-* An Add New Card button is visible on the deck page.
-* The user can open the card creation form from the deck page.
-* The new card is automatically associated with the current deck.
-* The user must provide both a question and answer.
-* After saving, the user returns to the deck workflow.
-* The newly created card is available when navigating through the deck.
+* A card's page shows its question, answer, and SM-2 scheduling details, with links to edit it, delete it, and return to the deck's cards.
+* The edit form shows the card's current question and answer.
+* Saving valid changes updates the card, and it stays in the same deck.
+* Blank questions or answers are rejected, and the existing card information is not overwritten.
+* The user can delete a card from the deck page or the card's page, and is asked to confirm first.
+* Deleting a card removes it and its review history from the deck. The deck and other cards are not affected.
+* The remaining cards keep their order. If no cards remain, the deck shows its empty-state message.
 
 ---
 
-### User Story 4: Edit a Card
+## Studying
 
-**As a student, I want to edit a card's question and answer so that I can correct or update my study material.**
+### US-8: Study Due Cards
+
+**As a student, I want to study only the cards that are due so that my session focuses on the material I need to review now.**
 
 **Acceptance Criteria:**
 
-* The user can click Edit for an existing card.
-* The edit form displays the current question and answer.
-* The user can update the question.
-* The user can update the answer.
-* The card remains associated with the same deck.
-* Blank questions or answers are rejected.
-* Invalid updates do not overwrite the existing card information.
-* After a successful update, the user returns to the deck page.
+* A study session shows only the selected deck's cards that are due today or earlier, or have never been reviewed.
+* The most overdue cards are shown first.
+* Cards scheduled for the future and cards from other decks are not shown.
+* The page shows how many cards are due.
+* The question is shown first. The answer is hidden until the user chooses "Show Answer", which also shows the rating buttons.
+* After a card is graded, it leaves the queue and the next due card is shown.
+* After the last due card is graded, the message "No cards are due for review. Great job!" is shown.
+* A deck with no cards shows an informative message. A deck that does not exist returns "not found".
 
 ---
 
-### User Story 5: Delete a Card
+### US-9: Schedule Reviews with SM-2
 
-**As a student, I want to delete a card that I no longer need so that I can keep my study deck organized.**
+**As a student, I want my self-assessment to schedule each card's next review so that difficult cards come back sooner and well-known cards come back later.**
 
 **Acceptance Criteria:**
 
-* The user can delete an existing card.
-* The card is removed from the selected deck.
-* The remaining cards are still available.
-* Cards from other decks are not affected.
-* The user can continue navigating through the remaining cards.
-* If no cards remain, an informative empty-state message is displayed.
-* Deleting a card does not delete the deck or any other cards.
+* The user can rate a card Again, Hard, Good, or Easy. These map to SM-2 quality scores 0, 3, 4, and 5.
+* Each rating updates the card's repetition count, interval, ease factor, and next review date.
+* Again resets the repetition sequence and schedules the card for tomorrow.
+* The first successful review schedules the card 1 day later, and the second 6 days later.
+* Good keeps the ease factor unchanged, Hard lowers it, and Easy raises it.
+* The ease factor never falls below 1.3.
+* The user is told when the graded card is due next.
+* Each grade records a review, which progress and streaks are calculated from.
+* An invalid rating, a card that is not due yet, and a card from another deck are rejected. The card is not changed and no review is recorded.
 
 ---
 
-### User Story 6: Delete a Deck and Its Cards
+### US-10: See a Session Summary
 
-**As a student, I want all cards to be deleted when I delete a deck so that no orphaned cards remain in the application.**
+**As a student, I want a summary when I finish my due cards so that I can see how the session went.**
 
 **Acceptance Criteria:**
 
-* The user can delete an existing deck.
-* The deck is removed from the application.
-* All cards associated with that deck are also deleted.
-* Cards belonging to other decks are not affected.
-* The user is redirected to the Decks page after deletion.
-* The deleted deck and its cards cannot be accessed afterward.
-
-### Card Story Classification
-
-| Story | Feature                        | Classification |
-| ----- | ------------------------------ | -------------- |
-| 1     | Create a Card                  | Essential      |
-| 2     | View/Navigate Through Cards    | Essential      |
-| 3     | Add a Card While Viewing Cards | Essential      |
-| 4     | Edit a Card                    | Essential      |
-| 5     | Delete a Card                  | Essential      |
-| 6     | Delete a Deck and Its Cards    | Essential      |
+* After the last due card is graded, a "Session complete" summary is shown.
+* The summary shows the number of cards reviewed, the percentage remembered, the study streak, a breakdown by rating, and the next review date in the deck.
+* Only reviews from this session are counted. Earlier sessions and other decks are ignored.
+* The summary is shown only once.
+* No summary is shown if nothing was graded.
+* An unfinished session from an earlier day is discarded.
 
 ---
 
-# Study and Spaced Repetition
+## Progress
 
-### User Story 1: Study Due Cards
+### US-11: Keep a Study Streak
 
-**As a learner, I want to study cards that are due so that my review session focuses on the material I need to review.**
+**As a student, I want to see my study streak for each deck so that I stay motivated to study every day.**
 
 **Acceptance Criteria:**
 
-* A study session can identify cards whose `next_review_date` is today or earlier.
-* The learner can see the question before revealing the answer.
-* The learner can reveal the answer.
-* A graded card is removed from the current review queue.
-* A clear message is displayed when there are no cards due for review.
+* The streak counts consecutive days with at least one review in the deck. Several reviews on the same day count once.
+* Studying today gives a one-day streak.
+* If the user studied yesterday but not yet today, the streak is kept and marked at risk, with a "Study now" link.
+* The streak resets to zero after a full missed day.
+* Reviews from other decks do not count toward the deck's streak.
+* The longest streak is tracked separately from the current streak.
+* Badges are earned at the 3, 7, 14, and 30-day milestones and are kept after a streak ends.
+* A streak goal bar fills toward the next milestone and is full once every milestone is passed.
 
 ---
 
-### User Story 2: Schedule Reviews with SM-2
+### US-12: View Deck Progress and Mastery
 
-**As a learner, I want my self-assessment to schedule the next review so that difficult cards can be reviewed sooner and familiar cards can be reviewed later.**
+**As a student, I want a progress page for each deck so that I can see how close I am to mastering it.**
 
 **Acceptance Criteria:**
 
-* The learner can choose Again, Hard, Good, or Easy.
-* Each choice is mapped to an SM-2 quality score.
-* The application updates the card's repetition count.
-* The application updates the review interval.
-* The application updates the ease factor.
-* The application calculates the next review date.
-* A failed review resets the repetition sequence and schedules the card for earlier review.
-* The ease factor cannot fall below 1.3.
+* The progress page is linked from My Decks and the deck page. A deck that does not exist returns "not found".
+* The page shows cards due today, total reviews, current streak, longest streak, and the streak goal.
+* A mastery bar groups the cards into New, Learning, and Mastered. A card is mastered once its review interval reaches 21 days, and a card rated Again moves back to the start of Learning.
+* The mastery percentage averages the deck's cards: a new card counts as 0% and a mastered card as 100%.
+* The page estimates the cards, reviews, and days left to master the deck, assuming every future rating is Good. Days left are based on the slowest card.
+* Calculating the estimate does not change any cards.
+* When every card is mastered, the page celebrates it.
+* A "This week" strip shows Monday to Sunday, marks today, and shows a review count for each day the deck was studied.
+* A new deck shows zeros and empty states instead of an error.
 
 ---
 
-### User Story 3: Track Study Progress
+## Optional stories
 
-**As a learner, I want to see study progress information so that I can understand how consistently I am reviewing my cards.**
+### US-13: Export a Deck as CSV
+
+**As a student, I want to export a deck as a CSV file so that I can back it up or share it.**
 
 **Acceptance Criteria:**
 
-* The application can display the number of cards due for review.
-* The application can display the number of cards reviewed.
-* The application can display a current study streak when review history is available.
-* Empty or unavailable progress data produces an appropriate empty state or zero value instead of an error.
-
-### Study Story Classification
-
-| Story | Feature                    | Classification |
-| ----- | -------------------------- | -------------- |
-| 1     | Study Due Cards            | Essential      |
-| 2     | Schedule Reviews with SM-2 | Essential      |
-| 3     | Track Study Progress       | Essential      |
+* Each deck on My Decks has an export link that downloads that deck's CSV file.
+* The file has the columns `deck_name`, `description`, `question`, and `answer`, with one row per card.
+* A deck with no cards still exports its header and deck information.
+* Cards from other decks are not exported.
+* Questions and answers containing commas, quotes, or line breaks are exported correctly.
 
 ---
 
-# CSV Import
+### US-14: Import Cards from CSV
 
-### User Story 1: Import Cards from CSV
-
-**As a student, I want to import flashcards from a CSV file so that I can add multiple cards without entering them individually.**
+**As a student, I want to import cards from a CSV file into a deck so that I can reuse study material without typing every card.**
 
 **Acceptance Criteria:**
 
-* The user can upload a CSV file containing flashcard information.
-* Valid records are imported into the selected deck.
-* Invalid records are skipped.
-* Valid records are still imported when the CSV contains both valid and invalid records.
-* The user receives a message indicating how many records were not imported.
-* Invalid CSV input does not crash the application.
+* The "Import Cards (CSV)" option is on the deck page and adds cards to that deck.
+* The file must have `question` and `answer` columns. Other columns are ignored.
+* Importing without choosing a file, or with a file missing the required columns, shows an error on the deck page and imports nothing.
+* Valid rows are imported and invalid rows, such as a blank answer, are skipped. The message reports how many cards were imported and how many rows were skipped.
+* Questions and answers containing commas, quotes, or line breaks are imported correctly.
 
-### CSV Story Classification
+## Story Classification
 
-| Story | Feature               | Classification |
-| ----- | --------------------- | -------------- |
-| 1     | Import Cards from CSV | Essential      |
+| Story | Feature | Classification |
+| ----- | ------- | -------------- |
+| US-1 | Create a Deck | Essential |
+| US-2 | View and Edit My Decks | Essential |
+| US-3 | View a Deck and Browse Its Cards | Essential |
+| US-4 | Delete a Deck and Its Cards | Essential |
+| US-5 | Add a Card to a Deck | Essential |
+| US-6 | View All Cards in a Deck | Essential |
+| US-7 | View, Edit, and Delete a Card | Essential |
+| US-8 | Study Due Cards | Essential |
+| US-9 | Schedule Reviews with SM-2 | Essential |
+| US-10 | See a Session Summary | Essential |
+| US-11 | Keep a Study Streak | Essential |
+| US-12 | View Deck Progress and Mastery | Essential |
+| US-13 | Export a Deck as CSV | Optional |
+| US-14 | Import Cards from CSV | Optional |
 
----
+## Testing
 
-# Testing
-
-The user stories are supported by automated tests using RSpec.
-
-The test suite includes:
-
-* Model tests for Deck and Card behavior and validations.
-* Tests for the Deck/Card relationship.
-* Request tests for user-facing Deck and Card functionality.
-* Tests for valid deck and card creation, viewing, editing, and deletion.
-* Sad-path tests for invalid deck and card submissions.
-* Tests for card navigation and empty-deck behavior.
-* Tests for CSV import and invalid records.
-* Tests related to the spaced-repetition data and behavior.
-
-The test suite can be run from the project root using:
+These user stories are supported by automated RSpec tests. Run them from the project root:
 
 ```bash
 bundle exec rspec
 ```
 
----
+| Stories | Spec files |
+| ------- | ---------- |
+| US-1 to US-4 | `spec/models/deck_spec.rb`, `spec/requests/decks_spec.rb`, `spec/routing/cards_routing_spec.rb` |
+| US-5 to US-7 | `spec/models/card_spec.rb`, `spec/requests/cards_spec.rb`, `spec/views/cards/` |
+| US-4, US-7 (confirmations) | `spec/requests/deck_import_export_ui_spec.rb` |
+| US-8, US-9 | `spec/models/card_spec.rb`, `spec/models/review_spec.rb`, `spec/requests/study_sessions_spec.rb` |
+| US-10 | `spec/requests/study_sessions_spec.rb`, `spec/services/study_session_summary_spec.rb` |
+| US-11, US-12 | `spec/models/deck_spec.rb`, `spec/services/deck_progress_spec.rb`, `spec/requests/deck_progress_spec.rb` |
+| US-13, US-14 | `spec/requests/cards_spec.rb`, `spec/requests/deck_import_export_ui_spec.rb` |
 
-# Optional Stories
-
-### User Story 1: Export Decks
-
-**As a learner, I want to export my study cards as a CSV file so that I can reuse my study material outside the application.**
-
-**Acceptance Criteria:**
-
-* The learner can export a selected deck.
-* The exported file contains the deck's questions and answers.
-* The exported file can be opened as a standard CSV file.
-
----
-
-### User Story 2: Quiz Mode
-
-**As a learner, I want an optional quiz mode so that I can practice answering cards without immediately seeing the answer.**
-
-**Acceptance Criteria:**
-
-* The learner can start a quiz from a selected deck.
-* The learner can answer each question before revealing the correct answer.
-* The learner can mark an answer as correct or incorrect.
-* The quiz displays a final score.
-* Quiz results do not change SM-2 scheduling unless explicitly configured to do so.
-
----
-
-### User Story 3: Handle Invalid Input
-
-**As a learner, I want invalid input to produce a helpful message so that I can correct it without losing my existing study material.**
-
-**Acceptance Criteria:**
-
-* Blank deck names are rejected.
-* Blank card questions are rejected.
-* Blank card answers are rejected.
-* Invalid review choices are handled with an appropriate validation message.
-* Invalid CSV records are handled gracefully.
-* Normal invalid input does not crash the application.
+See [testing.md](testing.md) for the full list of test cases and the latest coverage report.
